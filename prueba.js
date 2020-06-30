@@ -3,21 +3,21 @@ const MongoLib = require('./lib/mongo');
 const connector = new MongoLib();
 // algo.connect(); // ? probar conexion
 
-const data = {
-  email: 'test@laboratoria.com',
-  password: '123456',
-};
+// const data = {
+//   email: 'test@devlaboratoria.com',
+//   password: '123456',
+// };
 
 // ? creando registro
-connector.create('test', data)
-  .then(console.log);
+// connector.create('test', data)
+//   .then(console.log);
 
 // ? leyendo todos los registros
 // connector.getAll('test', { email: 'test@test.com' })
 //   .then(console.log);
 
 // ? leyendo un registro
-// connector.get('test', '5ef7965690a45c1b3859a132')
+// connector.getUser('test', 'Sandra@unsa.edu.com')
 //   .then(console.log);
 
 // ? actualizando un registro
