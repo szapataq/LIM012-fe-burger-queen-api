@@ -5,9 +5,9 @@ const {
   requireAdmin,
 } = require('../middleware/auth');
 
-const {
-  getUsers,
-} = require('../controller/users');
+// const {
+//   getUsers,
+// } = require('../controller/users');
 
 const connector = new MongoLib();
 
@@ -137,7 +137,6 @@ module.exports = (app, next) => {
       password: req.body.password,
       roles: req.body.roles,
     };
-    console.log(data);
     const uid = await connector.create('test', data);
     const user = await connector.get('test', uid);
     resp.send(user);
