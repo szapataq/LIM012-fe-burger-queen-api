@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-
+const MongoLib = require('../lib/mongo');
 const {
   requireAuth,
   requireAdmin,
@@ -9,9 +9,13 @@ const {
   getUsers,
 } = require('../controller/users');
 
+const connector = new MongoLib();
 
 const initAdminUser = (app, next) => {
-  const { adminEmail, adminPassword } = app.get('config');
+  const {
+    adminEmail,
+    adminPassword,
+  } = app.get('config');
   if (!adminEmail || !adminPassword) {
     return next();
   }
@@ -19,13 +23,14 @@ const initAdminUser = (app, next) => {
   const adminUser = {
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
-    roles: { admin: true },
+    roles: {
+      admin: true,
+    },
   };
 
   // TODO: crear usuaria admin
   next();
 };
-
 
 /*
  * Diagrama de flujo de una aplicación y petición en node - express :
@@ -76,7 +81,12 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-  app.get('/users', requireAdmin, getUsers);
+  // app.get('/users', requireAdmin, getUsers);
+  // app.get('/users', requireAdmin, async (req, resp, next) => {
+  app.get('/users', async (req, resp) => {
+    const allUsers = await connector.getAll('test');
+    resp.send(allUsers);
+  });
 
   /**
    * @name GET /users/:uid
@@ -94,7 +104,11 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', requireAuth, (req, resp) => {
+  // app.get('/users/:uid', requireAuth, (req, resp) => {
+  app.get('/users/:uid', async (req, resp) => {
+    const paramId = req.params.uid;
+    const oneUser = await connector.get('test', paramId);
+    resp.send(oneUser);
   });
 
   /**
@@ -116,7 +130,17 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (req, resp, next) => {
+  // app.post('/users', requireAdmin, (req, resp, next) => {
+  app.post('/users', async (req, resp) => {
+    const data = {
+      email: req.body.email,
+      password: req.body.password,
+      roles: req.body.roles,
+    };
+    console.log(data);
+    const uid = await connector.create('test', data);
+    const user = await connector.get('test', uid);
+    resp.send(user);
   });
 
   /**
@@ -141,7 +165,17 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put('/users/:uid', requireAuth, (req, resp, next) => {
+  // app.put('/users/:uid', requireAuth, async (req, resp) => {
+  app.put('/users/:uid', async (req, resp) => {
+    const paramId = req.params.uid;
+    const data = {
+      email: req.body.email,
+      password: req.body.password,
+      roles: req.body.roles,
+    };
+    const uid = await connector.update('test', paramId, data);
+    const user = await connector.get('test', uid);
+    resp.send(user);
   });
 
   /**
@@ -160,7 +194,12 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.delete('/users/:uid', requireAuth, (req, resp, next) => {
+  // app.delete('/users/:uid', requireAuth, (req, resp, next) => {
+  app.delete('/users/:uid', async (req, resp) => {
+    const paramId = req.params.uid;
+    const user = await connector.get('test', paramId);
+    await connector.delete('test', paramId);
+    resp.send(user);
   });
 
   initAdminUser(app, next);
