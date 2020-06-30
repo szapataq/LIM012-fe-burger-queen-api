@@ -2,10 +2,10 @@
 
 #### Sprint #1 25/06/2020 - 02/07/2020
 
-- [] [Node.js](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
+- [ ] [Node.js](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
     Node (o más correctamente: Node.js) es un entorno que trabaja en tiempo de ejecución, de código abierto, multi-plataforma, que permite a los desarrolladores crear toda clase de herramientas de lado servidor y aplicaciones en JavaScript. La ejecución en tiempo real está pensada para usarse fuera del contexto de un explorador web (es decir, ejecutarse directamente en una computadora o sistema operativo de servidor). Como tal, el entorno omite las APIs de JavaScript específicas del explorador web y añade soporte para APIs de sistema operativo más tradicionales que incluyen HTTP y bibliotecas de sistemas de ficheros.
 
-- [] [REST](https://platzi.com/clases/1638-api-rest/21611-que-significa-rest-y-que-es-una-api-restful/)
+- [ ] [REST](https://platzi.com/clases/1638-api-rest/21611-que-significa-rest-y-que-es-una-api-restful/)
     REST es un acrónimo de Representational State Transfer o transferencia de estado representacional, le agrega una capa muy delgada de complejidad y abstracción a HTTP. Mientras que HTTP es transferencia de archivos, REST es un protocolo que se basa en la transferencia de recursos.
     
     Una API *RESTful* es una API diseñada con los conceptos de REST:
@@ -25,7 +25,7 @@
 
     En resumen una peticion rest se basa en decir cual es el recurso sobre el que queremos realizar alguna accion, cual es la accion que queremos realizar y el URI es lo qu enos permite identificar exactamente cual es efecticvmente el recurso sobre el que vamos a actuar. Una peticion REST completa se basa en una URL que a diferencia del URI incluye el dominio, el protocolo... y un verbo HTTP que son get, put, delete... que mapean las acciones básicas como obtener un recurso, crear uno nuevo, eliminarlo, modificarlo, entre otros.
 
-- [] [Variables de Entorno](https://es.wikipedia.org/wiki/Variable_de_entorno)
+- [ ] [Variables de Entorno](https://es.wikipedia.org/wiki/Variable_de_entorno)
 
     Una variable de entorno es una variable dinámica que puede afectar al comportamiento de los procesos en ejecución en un ordenador.
     
@@ -61,7 +61,7 @@
 
     El uso del archivo .env junto con la biblioteca dotenv es un mecanismo que nos facilita la configuración de variables de entorno pero si por alguna razón las quisiéramos cargar de manera nativa, es decir desde el sistema operativo recomiendo este tutorial de Digital Ocean
 
-- [] [Middlewares](https://expressjs.com/es/guide/using-middleware.html)
+- [ ] [Middlewares](https://expressjs.com/es/guide/using-middleware.html)
 
     Las funciones de middleware son funciones que tienen acceso al objeto de solicitud (req), al objeto de respuesta (res) y a la siguiente función de middleware en el ciclo de solicitud/respuestas de la aplicación. La siguiente función de middleware se denota normalmente con una variable denominada next.
     
@@ -87,7 +87,7 @@
     [Middlewares de express](https://platzi.com/clases/1015-nodejs-2015/3761-middlewares-de-express/)    
     [Middlewares populares](https://platzi.com/clases/1437-express-js/15742-middlewares-populares/)
 
-- [] [JWT](https://platzi.com/blog/introduccion-json-web-tokens/)
+- [ ] [JWT](https://platzi.com/blog/introduccion-json-web-tokens/)
 
     JSON Web Token (JWT) es un estándar abierto (RFC-7519) basado en JSON para crear un token que sirva para enviar datos entre aplicaciones o servicios y garantizar que sean válidos y seguros.
     
@@ -95,11 +95,11 @@
     
     Este igual no es el único caso de uso para JWT, es posible usarlo para transferir cualquier datos entre servicios de nuestra aplicación y asegurarnos de que sean siempre válido. Por ejemplo si tenemos un servicio de envío de email otro servicio podría enviar una petición con un JWT junto al contenido del mail o cualquier otro dato necesario y que estemos seguros que esos datos no fueron alterados de ninguna forma.
 
-- [] [MongoDB](https://platzi.com/clases/1646-backend-nodejs/22033-creacion-de-una-bd-en-mongoatlas/)
+- [ ] [MongoDB](https://platzi.com/clases/1646-backend-nodejs/22033-creacion-de-una-bd-en-mongoatlas/)
 
-- [] [Conexión con MongoDB](https://platzi.com/clases/1646-backend-nodejs/22035-conexion-a-mongoatlas-una-instancia-de-mongodb/)
+- [ ] [Conexión con MongoDB](https://platzi.com/clases/1646-backend-nodejs/22035-conexion-a-mongoatlas-una-instancia-de-mongodb/)
 
-- [] [Clases js](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Classes)
+- [ ] [Clases js](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Classes)
     Las clases de javascript, introducidas en ECMAScript 2015, son una mejora sintáctica sobre la herencia basada en prototipos de JavaScript. La sintaxis de las clases no introduce un nuevo modelo de herencia orientada a objetos en JavaScript. Las clases de JavaScript proveen una sintaxis mucho más clara y simple para crear objetos y lidiar con la herencia.
     
     **Definiendo clases**
@@ -122,17 +122,17 @@
 
     Un constructor puede usar la palabra reservada super para llamar al constructor de una superclase
 
-- [] [Express](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
+- [ ] [Express](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
 
 [!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
 
-- [] [HTTP Request](https://expressjs.com/es/4x/api.html#req)
-[!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
+- [ ] [HTTP Request](https://expressjs.com/es/4x/api.html#req)
+    [!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
     El objeto request es el primer parámetro que recibe el callback dentro del método get de express, este objeto proporciona toda la información referente a la petición: como url, parámetros, método, headers enviados por el cliente, etc.
     
-- [] [req.query](http://expressjs.com/es/api.html#req.query) 
+- [ ] [req.query](http://expressjs.com/es/api.html#req.query) 
 
-- [] [HTTP Response]()
+- [ ] [HTTP Response]()
     El objeto response es el segundo parámetro que recibe el callback dentro del método get de express, este objeto representa la respuesta HTTP que express envía al cliente. Proporciona diversos métodos y propiedades que facilitan el envío de respuestas al cliente como son:
     - res.send()
     - res.sendFile()
@@ -142,7 +142,7 @@
     - res.jsonp()
     - res.set()
 
-- [] [HTTP Headers](https://developer.mozilla.org/es/docs/Web/HTTP/Headers)
+- [ ] [HTTP Headers](https://developer.mozilla.org/es/docs/Web/HTTP/Headers)
     Las cabeceras (en inglés headers) HTTP permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta. Una cabecera de petición esta compuesta por su nombre (no sensible a las mayusculas) seguido de dos puntos ':', y a continuación su valor (sin saltos de línea). Los espacios en blanco a la izquierda del valor son ignorados.
 
     Las Cabeceras pueden ser agrupadas de acuerdo a sus contextos:
@@ -155,7 +155,7 @@
 
     - [Establecer Headers personalizados](https://expressjs.com/es/4x/api.html#setHeaders)
     
-- [] [HTTP Body](https://expressjs.com/es/4x/api.html#req.body)
+- [ ] [HTTP Body](https://expressjs.com/es/4x/api.html#req.body)
     Contiene pares de datos clave-valor enviados en el cuerpo de la solicitud. De forma predeterminada, está undefinedy se completa cuando utiliza middleware de análisis de cuerpo como express.json()o express.urlencoded().
 
     [body](https://developer.mozilla.org/es/docs/Web/HTTP/Messages), la última parte del mensaje de respuesta el es 'cuerpo'. No todas las respuestas tienen uno, respuestas con un código de estado como 201 o 204 normalmente prescinden de él.
@@ -166,7 +166,7 @@
     - Cuerpos con un único dato, consisten en un simple archivo, de longitud desconocida, y codificado en partes, indicadas con Transfer-Encoding valor chunked (que significa: 'partido' en inglés).
     - Cuerpos con múltiples datos, consisten de varios datos, cada uno con una sección distinta de información. Este caso es relativamente raro y poco común.
 
-- [] [Línea de estado](https://developer.mozilla.org/es/docs/Web/HTTP/Messages)
+- [ ] [Línea de estado](https://developer.mozilla.org/es/docs/Web/HTTP/Messages)
     La línea de inicio de una respuesta HTTP, se llama la línea de estado, y contienen la siguiente información:
     - La versión del protocolo, normalmente HTTP/1.1.
     - Un código de estado, indicando el éxito o fracaso de la petición. Códigos de estado muy comunes son:  200, 404, o 302.
@@ -174,7 +174,7 @@
     
     Una línea de estado típica es por ejemplo:  HTTP/1.1 404 Not Found.
 
-- [] [Verbos HTTP](https://developer.mozilla.org/es/docs/Web/HTTP/Methods)
+- [ ] [Verbos HTTP](https://developer.mozilla.org/es/docs/Web/HTTP/Methods)
     HTTP define un conjunto de métodos de petición para indicar la acción que se desea realizar para un recurso determinado. Aunque estos también pueden ser sustantivos, estos métodos de solicitud a veces son llamados HTTP verbs. Cada uno de ellos implementan una semántica diferente, pero algunas características similares son compartidas por un grupo de ellos: ej. un request method puede ser safe, idempotent, o cacheable.
 
     **GET**
@@ -204,12 +204,12 @@
     **PATCH**
     El método PATCH  es utilizado para aplicar modificaciones parciales a un recurso.
 
-- [] [Códigos de status HTTP]()
-- [] [Encodings y JSON]()
-- [] [CORS]()
-- [] [MongoDB]()
-- [] [Instalación]()
-- [] [Connection String]()
-- [] [Comandos/Queries de creación, lectura, modificación y eliminación]()
+- [ ] [Códigos de status HTTP]()
+- [ ] [Encodings y JSON]()
+- [ ] [CORS]()
+- [ ] [MongoDB]()
+- [ ] [Instalación]()
+- [ ] [Connection String]()
+- [ ] [Comandos/Queries de creación, lectura, modificación y eliminación]()
 
 - [] []()
