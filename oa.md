@@ -95,6 +95,13 @@
     
     Este igual no es el único caso de uso para JWT, es posible usarlo para transferir cualquier datos entre servicios de nuestra aplicación y asegurarnos de que sean siempre válido. Por ejemplo si tenemos un servicio de envío de email otro servicio podría enviar una petición con un JWT junto al contenido del mail o cualquier otro dato necesario y que estemos seguros que esos datos no fueron alterados de ninguna forma.
 
+    **Estructura de un JWT**
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+    
+    1. HEADER: la primera parte, corresponde a los Header, y se almacena por lo general el tipo de token y el algoritmo de encriptamiento.
+    2. PAYLOAD: La segunda parte, contiene los datos que identifican al usuario, como puede ser su ID, nombre de usuario, etc.
+    3. FIRMA: La tercera parte es la firma digital, la cual se genera con las secciones anteriores y sirve para validar que el contenido no haya sido alterado.
+
 - [] [MongoDB](https://platzi.com/clases/1646-backend-nodejs/22033-creacion-de-una-bd-en-mongoatlas/)
 
 - [] [Conexión con MongoDB](https://platzi.com/clases/1646-backend-nodejs/22035-conexion-a-mongoatlas-una-instancia-de-mongodb/)
