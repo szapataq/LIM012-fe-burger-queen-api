@@ -13,10 +13,9 @@ const config = {
   dbPassword: process.env.DB_PASSWORD,
   dbHost: process.env.DB_HOST,
   dbName: process.env.DB_NAME,
-  jwtScret: process.env.JWT_SECRET,
+  jwtSecret: process.env.JWT_SECRET,
   adminEmail: process.env.ADMIN_EMAIL,
   adminPassword: process.env.ADMIN_PASSWORD,
 };
-
 
 module.exports = config;
