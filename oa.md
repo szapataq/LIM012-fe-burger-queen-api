@@ -151,8 +151,7 @@
 
 - [ ] [HTTP Request](https://expressjs.com/es/4x/api.html#req)
 
-    [!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
-    El objeto request es el primer parámetro que recibe el callback dentro del método get de express, este objeto proporciona toda la información referente a la petición: como url, parámetros, método, headers enviados por el cliente, etc.
+    El objeto [request](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4) es el primer parámetro que recibe el callback dentro del método get de express, este objeto proporciona toda la información referente a la petición: como url, parámetros, método, headers enviados por el cliente, etc.
     
 - [ ] [req.query](http://expressjs.com/es/api.html#req.query) 
 
