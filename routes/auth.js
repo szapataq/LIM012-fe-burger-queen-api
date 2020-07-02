@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const config = require('../config');
 const MongoLib = require('../lib/mongo');
-const { jwtScret } = require('../config');
 
-const { secret } = config;
+const { jwtSecret } = config;
 const connector = new MongoLib();
 
 /** @module auth */
@@ -28,18 +28,15 @@ module.exports = (app, nextMain) => {
       return next(400);
     }
     // TODO: autenticar a la usuarix
-    connector.getUser('test', email)
+    connector.getUser('users', email)
       .then((doc) => {
         if (!doc) {
           next(400);
-        } else if (password !== doc.password) {
+        } else if (!bcrypt.compareSync(password, doc.password)) {
           next(400);
         } else {
-          const token = jwt.sign({ uid: doc._id }, jwtScret);
-          resp.json({
-            success: true,
-            token,
-          });
+          const token = jwt.sign({ uid: doc._id }, jwtSecret);
+          return resp.status(200).send({ token });
         }
       });
   });
