@@ -61,6 +61,20 @@
 
     El uso del archivo .env junto con la biblioteca dotenv es un mecanismo que nos facilita la configuración de variables de entorno pero si por alguna razón las quisiéramos cargar de manera nativa, es decir desde el sistema operativo recomiendo este tutorial de Digital Ocean
 
+- [ ] [dotenv](https://www.npmjs.com/package/dotenv)
+    Dotenv es un módulo de dependencia cero que carga variables de entorno de un .envarchivo a process.env. El almacenamiento de la configuración en el entorno separado del código se basa en la metodología de la aplicación The Twelve-Factor.
+
+- [ ] [encodeURIComponent](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/encodeURIComponent)
+    El método encodeURIComponent() codifica un componente URI (Identificador Uniforme de Recursos) al reemplazar cada instancia de ciertos caracteres por una, dos, tres o cuatro secuencias de escape que representan la codificación UTF-8 del carácter (solo serán cuatro secuencias de escape para caracteres compuestos por dos carácteres "sustitutos").
+    
+    Usado en las variables de entorno USER y PASSWORD, garantiza que si por alguna razon hay algunos caracteres especiales estos no vayan a generar problemas al momento de conectarnos.
+
+    Ejemplo encodeURIComponent(' ')
+    Ejemplo decodeUriComponent(%20)
+
+- [ ] [Patron Singleton]()
+    Se usa para que cada vez que nos cocnectemos a la base de datos no se cree un nuevo cliente (conexión) sino que si el clienete ya esta creado y la conexcon ya esta abierta se use esa misma conexión para evitar que se sature de muchas conexiones y nos genere un error.
+
 - [ ] [Middlewares](https://expressjs.com/es/guide/using-middleware.html)
 
     Las funciones de middleware son funciones que tienen acceso al objeto de solicitud (req), al objeto de respuesta (res) y a la siguiente función de middleware en el ciclo de solicitud/respuestas de la aplicación. La siguiente función de middleware se denota normalmente con una variable denominada next.
@@ -203,6 +217,11 @@
     
     **PATCH**
     El método PATCH  es utilizado para aplicar modificaciones parciales a un recurso.
+
+- [ ] [Postman](https://openwebinars.net/blog/que-es-postman/)
+    Postman es una herramienta que se utiliza, sobre todo, para el testing de API REST, aunque también admite otras funcionalidades que se salen de lo que engloba el testing de este tipo de sistemas.
+    
+    Gracias a esta herramienta, además de testear, consumir y depurar API REST, podremos monitorizarlas, escribir pruebas automatizadas para ellas, documentarlas, mockearlas, simularlas, etc.
 
 - [ ] [Códigos de status HTTP]()
 - [ ] [Encodings y JSON]()
