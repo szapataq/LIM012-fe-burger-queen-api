@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+const MongoLib = require('../lib/mongo');
+
+const connector = new MongoLib();
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;
@@ -19,28 +22,38 @@ module.exports = (secret) => (req, resp, next) => {
     }
 
     // TODO: Verificar identidad del usuario usando `decodeToken.uid`
+    connector.get('users', decodedToken.uid)
+      .then((user) => {
+        req.user = user;
+        next();
+      })
+      .catch(() => {
+        next(403);
+      });
   });
 };
 
-
-module.exports.isAuthenticated = (req) => (
+module.exports.isAuthenticated = (req) => {
+  if (req.user) {
+    return true;
+  }
   // TODO: decidir por la informacion del request si la usuaria esta autenticada
-  false
-);
+  return false;
+};
 
-
-module.exports.isAdmin = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria es admin
-  false
-);
-
+module.exports.isAdmin = (req) => {
+  if (req.user.roles.admin) {
+    return true;
+  }
+  // TODO: TODO: decidir por la informacion del request si la usuaria es admin
+  return false;
+};
 
 module.exports.requireAuth = (req, resp, next) => (
   (!module.exports.isAuthenticated(req))
     ? next(401)
     : next()
 );
-
 
 module.exports.requireAdmin = (req, resp, next) => (
   // eslint-disable-next-line no-nested-ternary
