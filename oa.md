@@ -72,7 +72,10 @@
     Ejemplo encodeURIComponent(' ')
     Ejemplo decodeUriComponent(%20)
 
-- [ ] [Patron Singleton]()
+- [ ] [Patron Singleton](https://platzi.com/clases/1642-javascript-profesional/22186-patron-singleton-y-casos-de-uso/)
+    En ingeniería de software, [singleton](https://es.wikipedia.org/wiki/Singleton) o instancia única es un patrón de diseño que permite restringir la creación de objetos pertenecientes a una clase o el valor de un tipo a un único objeto.
+    Su intención consiste en garantizar que una clase solo tenga una instancia y proporcionar un punto de acceso global a ella.
+   
     Se usa para que cada vez que nos cocnectemos a la base de datos no se cree un nuevo cliente (conexión) sino que si el clienete ya esta creado y la conexcon ya esta abierta se use esa misma conexión para evitar que se sature de muchas conexiones y nos genere un error.
 
 - [ ] [Middlewares](https://expressjs.com/es/guide/using-middleware.html)
@@ -137,8 +140,7 @@
     Un constructor puede usar la palabra reservada super para llamar al constructor de una superclase
 
 - [ ] [Express](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
-
-[!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
+    [!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
 
 - [ ] [HTTP Request](https://expressjs.com/es/4x/api.html#req)
     [!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
@@ -222,6 +224,19 @@
     Postman es una herramienta que se utiliza, sobre todo, para el testing de API REST, aunque también admite otras funcionalidades que se salen de lo que engloba el testing de este tipo de sistemas.
     
     Gracias a esta herramienta, además de testear, consumir y depurar API REST, podremos monitorizarlas, escribir pruebas automatizadas para ellas, documentarlas, mockearlas, simularlas, etc.
+
+- [ ] [bcrypt](https://solidgeargroup.com/password-nodejs-mongodb-bcrypt/)
+    [Bcrypt](https://www.npmjs.com/package/bcrypt) es una función de hashing de passwords diseñado por Niels Provos y David Maxieres, basado en el cifrado de Blowfish. Se usa por defecto en sistemas OpenBSD y algunas distribuciones Linux y SUSE. Lleva incorporado un valor llamado salt, que es un fragmento aleatorio que se usará para generar el hash asociado a la password, y se guardará junto con ella en la base de datos. Así se evita que dos passwords iguales generen el mismo hash y los problemas que ello conlleva, por ejemplo, ataque por fuerza bruta a todas las passwords del sistema a la vez.
+
+    Para cifrar
+    hashSync(data, salt)
+    data - [REQUERIDO] - los datos a cifrar.
+    salt- [REQUERIDO] - la sal que se utilizará para descifrar la contraseña. si se especifica como un número, se generará una sal con el número especificado de rondas y se usará (ver ejemplo en Uso ).
+
+    Para comparar
+    compareSync(data, encrypted)
+    data - [REQUERIDO] - datos para comparar.
+    encrypted - [REQUERIDO] - datos para comparar.
 
 - [ ] [Códigos de status HTTP]()
 - [ ] [Encodings y JSON]()
