@@ -5,17 +5,14 @@ const {
   requireAdmin,
 } = require('../middleware/auth');
 
-// const {
-//   getUsers,
-// } = require('../controller/users');
+const {
+  getUsers,
+} = require('../controller/users');
 
 const connector = new MongoLib();
 
 const initAdminUser = (app, next) => {
-  const {
-    adminEmail,
-    adminPassword,
-  } = app.get('config');
+  const { adminEmail, adminPassword } = app.get('config');
   if (!adminEmail || !adminPassword) {
     return next();
   }
@@ -29,7 +26,17 @@ const initAdminUser = (app, next) => {
   };
 
   // TODO: crear usuaria admin
-  next();
+  connector.getAll('users', { email: adminEmail })
+    .then((arrayUsers) => {
+      if (arrayUsers.length > 0) {
+        next();
+      } else {
+        connector.create('users', adminUser)
+          .then(() => {
+            next();
+          });
+      }
+    });
 };
 
 /*
@@ -81,12 +88,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-  // app.get('/users', requireAdmin, getUsers);
-  // app.get('/users', requireAdmin, async (req, resp, next) => {
-  app.get('/users', async (req, resp) => {
-    const allUsers = await connector.getAll('test');
-    resp.send(allUsers);
-  });
+  app.get('/users', requireAdmin, getUsers);
 
   /**
    * @name GET /users/:uid
@@ -104,10 +106,9 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  // app.get('/users/:uid', requireAuth, (req, resp) => {
-  app.get('/users/:uid', async (req, resp) => {
+  app.get('/users/:uid', requireAuth, async (req, resp) => {
     const paramId = req.params.uid;
-    const oneUser = await connector.get('test', paramId);
+    const oneUser = await connector.get('users', paramId);
     resp.send(oneUser);
   });
 
@@ -130,16 +131,16 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  // app.post('/users', requireAdmin, (req, resp, next) => {
-  app.post('/users', async (req, resp) => {
+  app.post('/users', requireAdmin, async (req, resp, next) => {
+  // app.post('/users', async (req, resp) => {
     const data = {
       email: req.body.email,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 10),
       roles: req.body.roles,
     };
-    const uid = await connector.create('test', data);
-    const user = await connector.get('test', uid);
-    resp.send(user);
+    const uid = await connector.create('users', data);
+    const user = await connector.get('users', uid);
+    resp.status(201).send(user);
   });
 
   /**
@@ -164,16 +165,16 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  // app.put('/users/:uid', requireAuth, async (req, resp) => {
-  app.put('/users/:uid', async (req, resp) => {
+  app.put('/users/:uid', requireAuth, async (req, resp) => {
+  // app.put('/users/:uid', async (req, resp) => {
     const paramId = req.params.uid;
     const data = {
       email: req.body.email,
       password: req.body.password,
       roles: req.body.roles,
     };
-    const uid = await connector.update('test', paramId, data);
-    const user = await connector.get('test', uid);
+    const uid = await connector.update('users', paramId, data);
+    const user = await connector.get('users', uid);
     resp.send(user);
   });
 
@@ -193,11 +194,11 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  // app.delete('/users/:uid', requireAuth, (req, resp, next) => {
-  app.delete('/users/:uid', async (req, resp) => {
+  app.delete('/users/:uid', requireAuth, async (req, resp, next) => {
+  // app.delete('/users/:uid', async (req, resp) => {
     const paramId = req.params.uid;
-    const user = await connector.get('test', paramId);
-    await connector.delete('test', paramId);
+    const user = await connector.get('users', paramId);
+    await connector.delete('users', paramId);
     resp.send(user);
   });
 
