@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const config = require('../config');
 const MongoLib = require('../lib/mongo');
 
-const { jwtSecret } = config;
+// const { jwtSecret } = config;
 const connector = new MongoLib();
 
 /** @module auth */
@@ -35,7 +35,7 @@ module.exports = (app, nextMain) => {
         } else if (!bcrypt.compareSync(password, doc.password)) {
           next(400);
         } else {
-          const token = jwt.sign({ uid: doc._id }, jwtSecret); // { expiresIn: 60 * 60 * 24 }
+          const token = jwt.sign({ uid: doc._id }, config.jwtSecret); // { expiresIn: 60 * 60 * 24 }
           return resp.status(200).send({ token });
         }
       });
