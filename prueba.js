@@ -9,7 +9,7 @@ const connector = new MongoLib();
 // };
 
 // ? creando registro
-// connector.create('test', data)
+// connector.create('', data)
 //   .then(console.log);
 
 // ? leyendo todos los registros
@@ -29,3 +29,5 @@ const connector = new MongoLib();
 //   .then(console.log);
 
 // {"_id":{"$oid":"5ef7965690a45c1b3859a132"},"email":"test@test.com","password":"123456"}
+connector.pagination('users', 3, 2)
+  .then(console.log);
