@@ -5,10 +5,7 @@ const connector = new MongoLib();
 
 module.exports = {
   getUsers: async (req, resp, next) => {
-    const limit = 10;
-    // let page = req.query.page || 1;
     const allUsers = await connector.getAll('users')
-      .limit(limit);
     resp.send(allUsers);
     // next();
   },
