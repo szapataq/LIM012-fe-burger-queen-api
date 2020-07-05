@@ -3,9 +3,11 @@
 #### Sprint #1 25/06/2020 - 02/07/2020
 
 - [ ] [Node.js](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
+
     Node (o más correctamente: Node.js) es un entorno que trabaja en tiempo de ejecución, de código abierto, multi-plataforma, que permite a los desarrolladores crear toda clase de herramientas de lado servidor y aplicaciones en JavaScript. La ejecución en tiempo real está pensada para usarse fuera del contexto de un explorador web (es decir, ejecutarse directamente en una computadora o sistema operativo de servidor). Como tal, el entorno omite las APIs de JavaScript específicas del explorador web y añade soporte para APIs de sistema operativo más tradicionales que incluyen HTTP y bibliotecas de sistemas de ficheros.
 
 - [ ] [REST](https://platzi.com/clases/1638-api-rest/21611-que-significa-rest-y-que-es-una-api-restful/)
+    
     REST es un acrónimo de Representational State Transfer o transferencia de estado representacional, le agrega una capa muy delgada de complejidad y abstracción a HTTP. Mientras que HTTP es transferencia de archivos, REST es un protocolo que se basa en la transferencia de recursos.
     
     Una API *RESTful* es una API diseñada con los conceptos de REST:
@@ -35,6 +37,7 @@
 
     [Se utilizan](https://platzi.com/clases/1759-fundamentos-node/25186-variables-de-entorno/) para los valores que no deben ir dentro del software, como credenciales: claves, tokens.
     Para crearlas accedemos al processo. ```const variableDeEntorno = process.env.NOMBREDELAVARIABLEDEENTORNO```
+
     Se les puede dar un valor por defecto con la expresión or || y defirnir el valor que queremos darle por defecto.
     Buenas prácticas, las variables de entorno se escriben en mayúsculas porque se basan en el estándar de los servidores de linux antiguos y de como funcionaban las configuraciones casi todas las variables de entorno que estan fuera se escribían en mayúscula y si son 2 palabras se separan con _ ```MI_WEB```.
   
@@ -60,6 +63,26 @@
     **Variables de entorno de forma nativa**
 
     El uso del archivo .env junto con la biblioteca dotenv es un mecanismo que nos facilita la configuración de variables de entorno pero si por alguna razón las quisiéramos cargar de manera nativa, es decir desde el sistema operativo recomiendo este tutorial de Digital Ocean
+
+- [ ] [dotenv](https://www.npmjs.com/package/dotenv)
+
+    Dotenv es un módulo de dependencia cero que carga variables de entorno de un .envarchivo a process.env. El almacenamiento de la configuración en el entorno separado del código se basa en la metodología de la aplicación The Twelve-Factor.
+
+- [ ] [encodeURIComponent](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/encodeURIComponent)
+
+    El método encodeURIComponent() codifica un componente URI (Identificador Uniforme de Recursos) al reemplazar cada instancia de ciertos caracteres por una, dos, tres o cuatro secuencias de escape que representan la codificación UTF-8 del carácter (solo serán cuatro secuencias de escape para caracteres compuestos por dos carácteres "sustitutos").
+    
+    Usado en las variables de entorno USER y PASSWORD, garantiza que si por alguna razon hay algunos caracteres especiales estos no vayan a generar problemas al momento de conectarnos.
+
+    Ejemplo encodeURIComponent(' ')
+    Ejemplo decodeUriComponent(%20)
+
+- [ ] [Patron Singleton](https://platzi.com/clases/1642-javascript-profesional/22186-patron-singleton-y-casos-de-uso/)
+
+    En ingeniería de software, [singleton](https://es.wikipedia.org/wiki/Singleton) o instancia única es un patrón de diseño que permite restringir la creación de objetos pertenecientes a una clase o el valor de un tipo a un único objeto.
+    Su intención consiste en garantizar que una clase solo tenga una instancia y proporcionar un punto de acceso global a ella.
+   
+    Se usa para que cada vez que nos cocnectemos a la base de datos no se cree un nuevo cliente (conexión) sino que si el clienete ya esta creado y la conexcon ya esta abierta se use esa misma conexión para evitar que se sature de muchas conexiones y nos genere un error.
 
 - [ ] [Middlewares](https://expressjs.com/es/guide/using-middleware.html)
 
@@ -97,9 +120,10 @@
 
 - [ ] [MongoDB](https://platzi.com/clases/1646-backend-nodejs/22033-creacion-de-una-bd-en-mongoatlas/)
 
-- [ ] [Conexión con MongoDB](https://platzi.com/clases/1646-backend-nodejs/  22035-conexion-a-mongoatlas-una-instancia-de-mongodb/)
+- [ ] [Conexión con MongoDB](https://platzi.com/clases/1646-backend-nodejs/22035-conexion-a-mongoatlas-una-instancia-de-mongodb/)
 
 - [ ] [Clases js](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Classes)
+
     Las clases de javascript, introducidas en ECMAScript 2015, son una mejora sintáctica sobre la herencia basada en prototipos de JavaScript. La sintaxis de las clases no introduce un nuevo modelo de herencia orientada a objetos en JavaScript. Las clases de JavaScript proveen una sintaxis mucho más clara y simple para crear objetos y lidiar con la herencia.
     
     **Definiendo clases**
@@ -123,16 +147,20 @@
     Un constructor puede usar la palabra reservada super para llamar al constructor de una superclase
 
 - [ ] [Express](https://developer.mozilla.org/es/docs/Learn/Server-side/Express_Nodejs/Introduction)
-
-[!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
+    [!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
 
 - [ ] [HTTP Request](https://expressjs.com/es/4x/api.html#req)
-[!](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4)
-    El objeto request es el primer parámetro que recibe el callback dentro del método get de express, este objeto proporciona toda la información referente a la petición: como url, parámetros, método, headers enviados por el cliente, etc.
+
+    El objeto [request](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4) es el primer parámetro que recibe el callback dentro del método get de express, este objeto proporciona toda la información referente a la petición: como url, parámetros, método, headers enviados por el cliente, etc.
     
-- [ ] [req.query](http://expressjs.com/es/api.html#req.query) 
+- [ ] [req.query](http://expressjs.com/es/api.html#req.query)
+    Esta propiedad es un objeto que contiene una propiedad para cada parámetro de cadena de consulta en la ruta. Cuando el analizador de consultas está configurado como deshabilitado, es un objeto vacío {}; de lo contrario, es el resultado del analizador de consultas configurado.
+
+- [ ] [req.params](http://expressjs.com/es/api.html#req.params)
+    Esta propiedad es un objeto que contiene propiedades asignadas a los "parámetros" de la ruta nombrada . Por ejemplo, si tiene la ruta /user/:name, la propiedad "nombre" está disponible como req.params.name. Este objeto por defecto es {}.
 
 - [ ] [HTTP Response]()
+
     El objeto response es el segundo parámetro que recibe el callback dentro del método get de express, este objeto representa la respuesta HTTP que express envía al cliente. Proporciona diversos métodos y propiedades que facilitan el envío de respuestas al cliente como son:
     - res.send()
     - res.sendFile()
@@ -143,6 +171,7 @@
     - res.set()
 
 - [ ] [HTTP Headers](https://developer.mozilla.org/es/docs/Web/HTTP/Headers)
+
     Las cabeceras (en inglés headers) HTTP permiten al cliente y al servidor enviar información adicional junto a una petición o respuesta. Una cabecera de petición esta compuesta por su nombre (no sensible a las mayusculas) seguido de dos puntos ':', y a continuación su valor (sin saltos de línea). Los espacios en blanco a la izquierda del valor son ignorados.
 
     Las Cabeceras pueden ser agrupadas de acuerdo a sus contextos:
@@ -155,7 +184,8 @@
 
     - [Establecer Headers personalizados](https://expressjs.com/es/4x/api.html#setHeaders)
     
-- [ ] [HTTP Body](https://expressjs.com/es/4x/api.html#req.body)
+- [ ] [req.body](https://expressjs.com/es/4x/api.html#req.body)
+
     Contiene pares de datos clave-valor enviados en el cuerpo de la solicitud. De forma predeterminada, está undefinedy se completa cuando utiliza middleware de análisis de cuerpo como express.json()o express.urlencoded().
 
     [body](https://developer.mozilla.org/es/docs/Web/HTTP/Messages), la última parte del mensaje de respuesta el es 'cuerpo'. No todas las respuestas tienen uno, respuestas con un código de estado como 201 o 204 normalmente prescinden de él.
@@ -167,6 +197,7 @@
     - Cuerpos con múltiples datos, consisten de varios datos, cada uno con una sección distinta de información. Este caso es relativamente raro y poco común.
 
 - [ ] [Línea de estado](https://developer.mozilla.org/es/docs/Web/HTTP/Messages)
+
     La línea de inicio de una respuesta HTTP, se llama la línea de estado, y contienen la siguiente información:
     - La versión del protocolo, normalmente HTTP/1.1.
     - Un código de estado, indicando el éxito o fracaso de la petición. Códigos de estado muy comunes son:  200, 404, o 302.
@@ -175,6 +206,7 @@
     Una línea de estado típica es por ejemplo:  HTTP/1.1 404 Not Found.
 
 - [ ] [Verbos HTTP](https://developer.mozilla.org/es/docs/Web/HTTP/Methods)
+
     HTTP define un conjunto de métodos de petición para indicar la acción que se desea realizar para un recurso determinado. Aunque estos también pueden ser sustantivos, estos métodos de solicitud a veces son llamados HTTP verbs. Cada uno de ellos implementan una semántica diferente, pero algunas características similares son compartidas por un grupo de ellos: ej. un request method puede ser safe, idempotent, o cacheable.
 
     **GET**
@@ -204,12 +236,32 @@
     **PATCH**
     El método PATCH  es utilizado para aplicar modificaciones parciales a un recurso.
 
-- [] [Códigos de status HTTP]()
-- [] [Encodings y JSON]()
-- [] [CORS]()
-- [] [MongoDB]()
-- [] [Instalación]()
-- [] [Connection String]()
-- [] [Comandos/Queries de creación, lectura, modificación y eliminación]()
+- [ ] [Postman](https://openwebinars.net/blog/que-es-postman/)
 
-- [] []()
+    Postman es una herramienta que se utiliza, sobre todo, para el testing de API REST, aunque también admite otras funcionalidades que se salen de lo que engloba el testing de este tipo de sistemas.
+    
+    Gracias a esta herramienta, además de testear, consumir y depurar API REST, podremos monitorizarlas, escribir pruebas automatizadas para ellas, documentarlas, mockearlas, simularlas, etc.
+
+- [ ] [bcrypt](https://solidgeargroup.com/password-nodejs-mongodb-bcrypt/)
+
+    [Bcrypt](https://www.npmjs.com/package/bcrypt) es una función de hashing de passwords diseñado por Niels Provos y David Maxieres, basado en el cifrado de Blowfish. Se usa por defecto en sistemas OpenBSD y algunas distribuciones Linux y SUSE. Lleva incorporado un valor llamado salt, que es un fragmento aleatorio que se usará para generar el hash asociado a la password, y se guardará junto con ella en la base de datos. Así se evita que dos passwords iguales generen el mismo hash y los problemas que ello conlleva, por ejemplo, ataque por fuerza bruta a todas las passwords del sistema a la vez.
+
+    Para cifrar
+    hashSync(data, salt)
+    data - [REQUERIDO] - los datos a cifrar.
+    salt- [REQUERIDO] - la sal que se utilizará para descifrar la contraseña. si se especifica como un número, se generará una sal con el número especificado de rondas y se usará (ver ejemplo en Uso ).
+
+    Para comparar
+    compareSync(data, encrypted)
+    data - [REQUERIDO] - datos para comparar.
+    encrypted - [REQUERIDO] - datos para comparar.
+
+- [ ] [Códigos de status HTTP]()
+- [ ] [Encodings y JSON]()
+- [ ] [CORS]()
+- [ ] [MongoDB]()
+- [ ] [Instalación]()
+- [ ] [Connection String]()
+- [ ] [Comandos/Queries de creación, lectura, modificación y eliminación]()
+
+- [ ] []()
