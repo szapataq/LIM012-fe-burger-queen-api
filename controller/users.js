@@ -4,10 +4,12 @@ const MongoLib = require('../lib/mongo');
 const connector = new MongoLib();
 
 module.exports = {
-  getUsers: async (req, resp, next) => {
-    const allUsers = await connector.getAll('users')
+  getUsers: async (req, resp) => {
+    const { query } = req;
+    const allUsers = query
+      ? await connector.getAll('users', parseInt(query.limit, 0), parseInt(query.page, 0))
+      : await connector.getAll('users');
     resp.send(allUsers);
-    // next();
   },
 
   getOneUser: async (req, resp) => {
