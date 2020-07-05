@@ -6,7 +6,7 @@ const {
 } = require('../middleware/auth');
 
 const {
-  getUsers,
+  getUsers, getOneUser, createUser, updateUser, deleteUser,
 } = require('../controller/users');
 
 const connector = new MongoLib();
@@ -106,11 +106,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', requireAuth, async (req, resp) => {
-    const paramId = req.params.uid;
-    const oneUser = await connector.get('users', paramId);
-    resp.send(oneUser);
-  });
+  app.get('/users/:uid', requireAuth, getOneUser);
 
   /**
    * @name POST /users
@@ -131,17 +127,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, async (req, resp, next) => {
-  // app.post('/users', async (req, resp) => {
-    const data = {
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 10),
-      roles: req.body.roles,
-    };
-    const uid = await connector.create('users', data);
-    const user = await connector.get('users', uid);
-    resp.status(201).send(user);
-  });
+  app.post('/users', requireAdmin, createUser);
 
   /**
    * @name PUT /users
@@ -165,18 +151,7 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put('/users/:uid', requireAuth, async (req, resp) => {
-  // app.put('/users/:uid', async (req, resp) => {
-    const paramId = req.params.uid;
-    const data = {
-      email: req.body.email,
-      password: req.body.password,
-      roles: req.body.roles,
-    };
-    const uid = await connector.update('users', paramId, data);
-    const user = await connector.get('users', uid);
-    resp.send(user);
-  });
+  app.put('/users/:uid', requireAuth, updateUser);
 
   /**
    * @name DELETE /users
@@ -194,13 +169,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.delete('/users/:uid', requireAuth, async (req, resp, next) => {
-  // app.delete('/users/:uid', async (req, resp) => {
-    const paramId = req.params.uid;
-    const user = await connector.get('users', paramId);
-    await connector.delete('users', paramId);
-    resp.send(user);
-  });
+  app.delete('/users/:uid', requireAuth, deleteUser);
 
   initAdminUser(app, next);
 };
