@@ -153,7 +153,11 @@
 
     El objeto [request](https://medium.com/@aarnlpezsosa/introducci%C3%B3n-a-express-js-a1ebe16dbcf4) es el primer parámetro que recibe el callback dentro del método get de express, este objeto proporciona toda la información referente a la petición: como url, parámetros, método, headers enviados por el cliente, etc.
     
-- [ ] [req.query](http://expressjs.com/es/api.html#req.query) 
+- [ ] [req.query](http://expressjs.com/es/api.html#req.query)
+    Esta propiedad es un objeto que contiene una propiedad para cada parámetro de cadena de consulta en la ruta. Cuando el analizador de consultas está configurado como deshabilitado, es un objeto vacío {}; de lo contrario, es el resultado del analizador de consultas configurado.
+
+- [ ] [req.params](http://expressjs.com/es/api.html#req.params)
+    Esta propiedad es un objeto que contiene propiedades asignadas a los "parámetros" de la ruta nombrada . Por ejemplo, si tiene la ruta /user/:name, la propiedad "nombre" está disponible como req.params.name. Este objeto por defecto es {}.
 
 - [ ] [HTTP Response]()
 
@@ -180,7 +184,7 @@
 
     - [Establecer Headers personalizados](https://expressjs.com/es/4x/api.html#setHeaders)
     
-- [ ] [HTTP Body](https://expressjs.com/es/4x/api.html#req.body)
+- [ ] [req.body](https://expressjs.com/es/4x/api.html#req.body)
 
     Contiene pares de datos clave-valor enviados en el cuerpo de la solicitud. De forma predeterminada, está undefinedy se completa cuando utiliza middleware de análisis de cuerpo como express.json()o express.urlencoded().
 
