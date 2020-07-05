@@ -19,14 +19,26 @@ module.exports = {
   },
 
   createUser: async (req, resp, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      next(400);
+    }
+
     const data = {
       email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 10),
+      password: bcrypt.hashSync(password, 10),
       roles: req.body.roles,
     };
-    const uid = await connector.create('users', data);
-    const user = await connector.get('users', uid);
-    resp.status(201).send(user);
+
+    const existUser = await connector.getUser('users', data.email);
+    if (existUser) {
+      next(403);
+    } else {
+      const uid = await connector.create('users', data);
+      const user = await connector.get('users', uid);
+      resp.status(201).send(user);
+    }
   },
 
   updateUser: async (req, resp) => {
