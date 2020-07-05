@@ -7,7 +7,7 @@ module.exports = {
   getUsers: async (req, resp) => {
     const { query } = req;
     const allUsers = query
-      ? await connector.getAll('users', parseInt(query.limit, 0), parseInt(query.page, 0))
+      ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
       : await connector.getAll('users');
     resp.send(allUsers);
   },
