@@ -260,4 +260,4 @@
 - [ ] [Connection String]()
 - [ ] [Comandos/Queries de creación, lectura, modificación y eliminación]()
 
-- [] []()
+- [ ] []()
