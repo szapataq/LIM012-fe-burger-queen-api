@@ -2,6 +2,9 @@ const {
   requireAuth,
   requireAdmin,
 } = require('../middleware/auth');
+const MongoLib = require('../lib/mongo');
+
+const connector = new MongoLib();
 
 /** @module products */
 module.exports = (app, nextMain) => {
@@ -27,7 +30,13 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  app.get('/products', requireAuth, (req, resp, next) => {
+
+  app.get('/products', requireAuth, async (req, resp, next) => {
+    const { query } = req;
+    const allProducts = query
+      ? await connector.pagination('products', parseInt(query.limit, 0), parseInt(query.page, 0))
+      : await connector.getAll('products');
+    resp.send(allProducts);
   });
 
   /**
@@ -47,7 +56,11 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.get('/products/:productId', requireAuth, (req, resp, next) => {
+
+  app.get('/products/:productId', requireAuth, async (req, resp, next) => {
+    const paramId = req.params.productId;
+    const oneProduct = await connector.get('products', paramId);
+    resp.send(oneProduct);
   });
 
   /**
@@ -72,9 +85,26 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.post('/products', requireAdmin, (req, resp, next) => {
-  });
 
+  app.post('/products', requireAdmin, async (req, resp, next) => {
+    const { name, price } = req.body;
+
+    if (!name || !price) {
+      next(400);
+    }
+
+    const data = {
+      name: req.body.name,
+      price: req.body.price,
+      image: req.body.image,
+      type: req.body.type,
+      dateEntry: new Date(),
+    };
+
+    const id = await connector.create('products', data);
+    const product = await connector.get('products', id);
+    resp.status(201).send(product);
+  });
 
   /**
    * @name PUT /products
@@ -99,7 +129,19 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId', requireAdmin, (req, resp, next) => {
+
+  app.put('/products/:productId', requireAdmin, async (req, resp, next) => {
+    const paramId = req.params.productId;
+    const data = {
+      name: req.body.name,
+      price: req.body.price,
+      image: req.body.image,
+      type: req.body.type,
+      dateEntry: new Date(),
+    };
+    const productId = await connector.update('products', paramId, data);
+    const product = await connector.get('products', productId);
+    resp.send(product);
   });
 
   /**
@@ -120,7 +162,12 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es ni admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
+
+  app.delete('/products/:productId', requireAdmin, async (req, resp, next) => {
+    const paramId = req.params.productId;
+    const product = await connector.get('products', paramId);
+    await connector.delete('products', paramId);
+    resp.send(product);
   });
 
   nextMain();
