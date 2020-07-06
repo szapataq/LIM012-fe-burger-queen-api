@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
+const { linksPagination } = require('../utils/utils');
 
 const connector = new MongoLib();
 
@@ -9,6 +10,10 @@ module.exports = {
     const allUsers = query
       ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
       : await connector.getAll('users');
+    console.log(req.get('Referer'));
+
+    const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('users')).length);
+    resp.set(links);
     resp.send(allUsers);
   },
 
