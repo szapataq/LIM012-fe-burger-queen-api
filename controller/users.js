@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
 const { linksPagination } = require('../utils/utils');
-const { response } = require('express');
 
 const connector = new MongoLib();
 
