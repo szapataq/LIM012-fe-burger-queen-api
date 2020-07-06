@@ -1,15 +1,7 @@
 const linksPagination = (url, limit, page, total) => {
-  const prevPage = parseInt(page, 0) - 1;
-  const lastPage = total / limit;
-  const nextPage = parseInt(page, 0) + 1;
-
-  // const nextPage = () => {
-  //   if () {
-  //     parseInt(page, 0) + 1;
-  //   } else {
-  //     parseInt(page, 0);
-  //   }
-  // };
+  const prevPage = page > 1 ? (parseInt(page, 0) - 1) : 1;
+  const lastPage = Math.ceil(total / limit);
+  const nextPage = limit * page < total ? parseInt(page, 0) + 1 : Math.ceil(total / limit);
 
   const link = {
     first: `${url}?limit=${limit}&page=1`,
