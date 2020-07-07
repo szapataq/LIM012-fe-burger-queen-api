@@ -17,23 +17,33 @@ module.exports = {
     resp.send(allUsers);
   },
 
-  getOneUser: async (req, resp) => {
+  getOneUser: (req, resp, next) => {
     const paramId = req.params.uid;
-    const oneUser = await connector.get('users', paramId);
-    resp.send(oneUser);
+    connector.get('users', paramId)
+      .then((objUser) => {
+        resp.send(objUser);
+      })
+      .catch(() => {
+        next(404);
+      });
   },
 
   createUser: async (req, resp, next) => {
-    const { email, password } = req.body;
+    const { email, password, roles } = req.body;
 
     if (!email || !password) {
       next(400);
     }
-
+    let currentRol;
+    if (roles) {
+      currentRol = roles.admin;
+    } else {
+      currentRol = false;
+    }
     const data = {
       email: req.body.email,
       password: bcrypt.hashSync(password, 10),
-      roles: req.body.roles,
+      roles: { admin: currentRol },
     };
 
     const existUser = await connector.getUser('users', data.email);
@@ -42,17 +52,21 @@ module.exports = {
     } else {
       const uid = await connector.create('users', data);
       const user = await connector.get('users', uid);
-      resp.status(201).send(user);
+      resp.status(200).send(user);
     }
   },
 
-  updateUser: async (req, resp) => {
-    const paramId = req.params.uid;
+  updateUser: async (req, resp, next) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      next(400);
+    }
     const data = {
       email: req.body.email,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 10),
       roles: req.body.roles,
     };
+    const paramId = req.params.uid;
     const uid = await connector.update('users', paramId, data);
     const user = await connector.get('users', uid);
     resp.send(user);
