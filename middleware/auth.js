@@ -24,7 +24,7 @@ module.exports = (secret) => (req, resp, next) => {
     // TODO: Verificar identidad del usuario usando `decodeToken.uid`
     connector.get('users', decodedToken.uid)
       .then((user) => {
-        req.headers.user = user;
+        req.user = user;
         next();
       })
       .catch(() => {
@@ -34,7 +34,7 @@ module.exports = (secret) => (req, resp, next) => {
 };
 
 module.exports.isAuthenticated = (req) => {
-  if (req.headers.user) {
+  if (req.user) {
     // console.log(req.headers.user);
     return true;
   }
@@ -43,7 +43,7 @@ module.exports.isAuthenticated = (req) => {
 };
 
 module.exports.isAdmin = (req) => {
-  if (req.headers.user.roles.admin) {
+  if (req.user.roles.admin) {
     return true;
   }
   // TODO: TODO: decidir por la informacion del request si la usuaria es admin
