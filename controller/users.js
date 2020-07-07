@@ -69,7 +69,7 @@ module.exports = {
       currentRol = false;
     }
     const data = {
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       password: bcrypt.hashSync(password, 10),
       roles: {
         admin: currentRol,
