@@ -80,7 +80,7 @@ module.exports = {
       },
     };
 
-    
+    if (!regExpEmail.test(data.email)) next(400);
     const existUser = await connector.getUser('users', data.email);
     if (existUser) {
       next(403);
