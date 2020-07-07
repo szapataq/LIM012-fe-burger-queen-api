@@ -27,9 +27,9 @@ module.exports = {
     const {
       query,
     } = req;
-    const allUsers = query ?
-      await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0)) :
-      await connector.getAll('users');
+    const allUsers = query
+      ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
+      : await connector.getAll('users');
     // console.log(req.get('Referer'));
 
     const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('users')).length);
@@ -91,7 +91,7 @@ module.exports = {
 
   updateUser: async (req, resp, next) => {
     try {
-      if (isAdmin && isAuthenticated) {
+      if (isAdmin(req) && isAuthenticated(req)) {
         const {
           uid,
         } = req.params;
@@ -115,6 +115,18 @@ module.exports = {
           next(404);
         }
         resp.send(user);
+      } else if (isAuthenticated(req)) {
+        const { uid } = req.params;
+        const { _id, email } = req.user;
+        if (uid !== String(_id) && uid !== email) next(403);
+
+        const oneUser = await getUserIdOrEmail(uid);
+        const data = { password: bcrypt.hashSync(req.body.password, 10) };
+        const updateUser = await connector.update('users', oneUser._id, data);
+        const user = await connector.get('users', updateUser);
+
+        if (!user) next(404);
+        resp.send(user);
       } else {
         next(403);
       }
@@ -126,7 +138,7 @@ module.exports = {
   deleteUser: async (req, resp, next) => {
     try {
       const {
-        uid
+        uid,
       } = req.params;
       const oneUser = await getUserIdOrEmail(uid);
       const deletedUser = await connector.delete('users', oneUser._id);
