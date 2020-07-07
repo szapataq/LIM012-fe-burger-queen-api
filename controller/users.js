@@ -1,15 +1,35 @@
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
-const { linksPagination } = require('../utils/utils');
+const {
+  isAdmin,
+  isAuthenticated,
+} = require('../middleware/auth');
+const {
+  linksPagination,
+} = require('../utils/utils');
 
 const connector = new MongoLib();
 
+const getUserIdOrEmail = async (req) => {
+  let oneUser;
+
+  if (RegExp('^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$').test(req)) {
+    oneUser = await connector.getUser('users', req);
+  } else {
+    oneUser = await connector.get('users', req);
+  }
+  // console.log(oneUser, 'useeeeeeeeeeeeerrrrrrrrr');
+  return oneUser;
+};
+
 module.exports = {
   getUsers: async (req, resp) => {
-    const { query } = req;
-    const allUsers = query
-      ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
-      : await connector.getAll('users');
+    const {
+      query,
+    } = req;
+    const allUsers = query ?
+      await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0)) :
+      await connector.getAll('users');
     // console.log(req.get('Referer'));
 
     const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('users')).length);
@@ -17,19 +37,27 @@ module.exports = {
     resp.send(allUsers);
   },
 
-  getOneUser: (req, resp, next) => {
-    const paramId = req.params.uid;
-    connector.get('users', paramId)
-      .then((objUser) => {
-        resp.send(objUser);
-      })
-      .catch(() => {
+  getOneUser: async (req, resp, next) => {
+    try {
+      const {
+        uid,
+      } = req.params;
+      const oneUser = await getUserIdOrEmail(uid);
+      if (!oneUser) {
         next(404);
-      });
+      }
+      resp.send(oneUser);
+    } catch (error) {
+      next(404);
+    }
   },
 
   createUser: async (req, resp, next) => {
-    const { email, password, roles } = req.body;
+    const {
+      email,
+      password,
+      roles,
+    } = req.body;
 
     if (!email || !password) {
       next(400);
@@ -43,7 +71,12 @@ module.exports = {
     const data = {
       email: req.body.email,
       password: bcrypt.hashSync(password, 10),
-      roles: { admin: currentRol },
+      roles: {
+        admin: currentRol,
+      },
+      status: {
+        isActive: true,
+      },
     };
 
     const existUser = await connector.getUser('users', data.email);
@@ -57,25 +90,53 @@ module.exports = {
   },
 
   updateUser: async (req, resp, next) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      next(400);
+    try {
+      if (isAdmin && isAuthenticated) {
+        const {
+          uid,
+        } = req.params;
+        const oneUser = await getUserIdOrEmail(uid);
+
+        const {
+          email,
+          password,
+        } = req.body;
+        if (!email || !password) {
+          next(400);
+        }
+        const data = {
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 10),
+          roles: req.body.roles,
+        };
+        const updateUser = await connector.update('users', oneUser._id, data);
+        const user = await connector.get('users', updateUser);
+        if (!user) {
+          next(404);
+        }
+        resp.send(user);
+      } else {
+        next(403);
+      }
+    } catch (error) {
+      next(404);
     }
-    const data = {
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 10),
-      roles: req.body.roles,
-    };
-    const paramId = req.params.uid;
-    const uid = await connector.update('users', paramId, data);
-    const user = await connector.get('users', uid);
-    resp.send(user);
   },
 
   deleteUser: async (req, resp, next) => {
-    const paramId = req.params.uid;
-    const user = await connector.get('users', paramId);
-    await connector.delete('users', paramId);
-    resp.send(user);
+    try {
+      const {
+        uid
+      } = req.params;
+      const oneUser = await getUserIdOrEmail(uid);
+      const deletedUser = await connector.delete('users', oneUser._id);
+      const user = await connector.get('users', deletedUser);
+      if (!user) {
+        next(404);
+      }
+      resp.send(user);
+    } catch (error) {
+      next(404);
+    }
   },
 };
