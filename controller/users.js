@@ -6,6 +6,7 @@ const {
 } = require('../middleware/auth');
 const {
   linksPagination,
+  regExpEmail,
 } = require('../utils/utils');
 
 const connector = new MongoLib();
@@ -13,7 +14,7 @@ const connector = new MongoLib();
 const getUserIdOrEmail = async (req) => {
   let oneUser;
 
-  if (RegExp('^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$').test(req)) {
+  if (regExpEmail.test(req)) {
     oneUser = await connector.getUser('users', req);
   } else {
     oneUser = await connector.get('users', req);
@@ -79,6 +80,7 @@ module.exports = {
       },
     };
 
+    
     const existUser = await connector.getUser('users', data.email);
     if (existUser) {
       next(403);
