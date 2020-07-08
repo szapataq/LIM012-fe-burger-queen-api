@@ -19,7 +19,6 @@ const getUserIdOrEmail = async (req) => {
   } else {
     oneUser = await connector.get('users', req);
   }
-  // console.log(oneUser, 'useeeeeeeeeeeeerrrrrrrrr');
   return oneUser;
 };
 
@@ -40,14 +39,22 @@ module.exports = {
 
   getOneUser: async (req, resp, next) => {
     try {
-      const {
-        uid,
-      } = req.params;
-      const oneUser = await getUserIdOrEmail(uid);
-      if (!oneUser) {
-        next(404);
+      const { uid } = req.params;
+      if (isAdmin(req) && isAuthenticated(req)) {
+        const oneUser = await getUserIdOrEmail(uid);
+        if (!oneUser) {
+          next(404);
+        }
+        resp.send(oneUser);
+      } else if (isAuthenticated(req)) {
+        const { _id, email } = req.user;
+        if (uid !== String(_id) && uid !== email) {
+          next(403);
+        } else {
+          const oneUser = await getUserIdOrEmail(uid);
+          resp.send(oneUser);
+        }
       }
-      resp.send(oneUser);
     } catch (error) {
       next(404);
     }
@@ -80,23 +87,24 @@ module.exports = {
       },
     };
 
-    if (!regExpEmail.test(data.email)) next(400);
-    const existUser = await connector.getUser('users', data.email);
-    if (existUser) {
-      next(403);
+    if (!regExpEmail.test(data.email)) {
+      next(400);
     } else {
-      const uid = await connector.create('users', data);
-      const user = await connector.get('users', uid);
-      resp.status(201).send(user);
+      const existUser = await connector.getUser('users', data.email);
+      if (existUser) {
+        next(403);
+      } else {
+        const uid = await connector.create('users', data);
+        const user = await connector.get('users', uid);
+        resp.status(200).send(user);
+      }
     }
   },
 
   updateUser: async (req, resp, next) => {
     try {
       if (isAdmin(req) && isAuthenticated(req)) {
-        const {
-          uid,
-        } = req.params;
+        const { uid } = req.params;
         const oneUser = await getUserIdOrEmail(uid);
 
         const {
@@ -126,7 +134,6 @@ module.exports = {
         const data = { password: bcrypt.hashSync(req.body.password, 10) };
         const updateUser = await connector.update('users', oneUser._id, data);
         const user = await connector.get('users', updateUser);
-
         if (!user) next(404);
         resp.send(user);
       } else {
