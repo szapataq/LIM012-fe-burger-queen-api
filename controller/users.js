@@ -87,7 +87,7 @@ module.exports = {
     } else {
       const uid = await connector.create('users', data);
       const user = await connector.get('users', uid);
-      resp.status(200).send(user);
+      resp.status(201).send(user);
     }
   },
 
