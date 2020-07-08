@@ -2,9 +2,10 @@ const {
   requireAuth,
   requireAdmin,
 } = require('../middleware/auth');
-const MongoLib = require('../lib/mongo');
 
-const connector = new MongoLib();
+const {
+  getProducts, getOneProduct, createProduct, updateProduct, deleteProduct,
+} = require('../controller/products');
 
 /** @module products */
 module.exports = (app, nextMain) => {
@@ -31,13 +32,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
 
-  app.get('/products', requireAuth, async (req, resp, next) => {
-    const { query } = req;
-    const allProducts = query
-      ? await connector.pagination('products', parseInt(query.limit, 0), parseInt(query.page, 0))
-      : await connector.getAll('products');
-    resp.send(allProducts);
-  });
+  app.get('/products', requireAuth, getProducts);
 
   /**
    * @name GET /products/:productId
@@ -57,11 +52,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
 
-  app.get('/products/:productId', requireAuth, async (req, resp, next) => {
-    const paramId = req.params.productId;
-    const oneProduct = await connector.get('products', paramId);
-    resp.send(oneProduct);
-  });
+  app.get('/products/:productId', requireAuth, getOneProduct);
 
   /**
    * @name POST /products
@@ -86,25 +77,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
 
-  app.post('/products', requireAdmin, async (req, resp, next) => {
-    const { name, price } = req.body;
-
-    if (!name || !price) {
-      next(400);
-    }
-
-    const data = {
-      name: req.body.name,
-      price: req.body.price,
-      image: req.body.image,
-      type: req.body.type,
-      dateEntry: new Date(),
-    };
-
-    const id = await connector.create('products', data);
-    const product = await connector.get('products', id);
-    resp.status(201).send(product);
-  });
+  app.post('/products', requireAdmin, createProduct);
 
   /**
    * @name PUT /products
@@ -130,19 +103,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
 
-  app.put('/products/:productId', requireAdmin, async (req, resp, next) => {
-    const paramId = req.params.productId;
-    const data = {
-      name: req.body.name,
-      price: req.body.price,
-      image: req.body.image,
-      type: req.body.type,
-      dateEntry: new Date(),
-    };
-    const productId = await connector.update('products', paramId, data);
-    const product = await connector.get('products', productId);
-    resp.send(product);
-  });
+  app.put('/products/:productId', requireAdmin, updateProduct);
 
   /**
    * @name DELETE /products
@@ -163,12 +124,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
 
-  app.delete('/products/:productId', requireAdmin, async (req, resp, next) => {
-    const paramId = req.params.productId;
-    const product = await connector.get('products', paramId);
-    await connector.delete('products', paramId);
-    resp.send(product);
-  });
+  app.delete('/products/:productId', requireAdmin, deleteProduct);
 
   nextMain();
 };
