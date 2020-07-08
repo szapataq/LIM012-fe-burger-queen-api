@@ -2,6 +2,7 @@ const {
   requireAuth,
 } = require('../middleware/auth');
 const MongoLib = require('../lib/mongo');
+const { getAllOrders } = require('../controller/orders');
 
 const connector = new MongoLib();
 /** @module orders */
@@ -32,14 +33,7 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  app.get('/orders', requireAuth, async (req, resp, next) => {
-    const { query } = req;
-    const allOrders = query
-      ? await connector.pagination('orders', parseInt(query.limit, 0), parseInt(query.page, 0))
-      : await connector.getAll('orders');
-    resp.send(allOrders);
-
-  });
+  app.get('/orders', requireAuth, getAllOrders);
 
   /**
    * @name GET /orders/:orderId
