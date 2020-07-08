@@ -40,12 +40,21 @@ module.exports = {
   getOneUser: async (req, resp, next) => {
     try {
       const { uid } = req.params;
-      const oneUser = await getUserIdOrEmail(uid);
-      // console.log(oneUser);
-      if (!oneUser) {
-        next(404);
+      if (isAdmin(req) && isAuthenticated(req)) {
+        const oneUser = await getUserIdOrEmail(uid);
+        if (!oneUser) {
+          next(404);
+        }
+        resp.send(oneUser);
+      } else if (isAuthenticated(req)) {
+        const { _id, email } = req.user;
+        if (uid !== String(_id) && uid !== email) {
+          next(403);
+        } else {
+          const oneUser = await getUserIdOrEmail(uid);
+          resp.send(oneUser);
+        }
       }
-      resp.send(oneUser);
     } catch (error) {
       next(404);
     }
