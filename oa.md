@@ -256,6 +256,12 @@
     data - [REQUERIDO] - datos para comparar.
     encrypted - [REQUERIDO] - datos para comparar.
 
+    #### Sprint #2
+
+    - [ ] [async y await]()
+    - [ ] [try, catch]()
+
+
 - [ ] [Códigos de status HTTP]()
 - [ ] [Encodings y JSON]()
 - [ ] [CORS]()
