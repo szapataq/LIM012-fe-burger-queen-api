@@ -52,7 +52,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
 
-  app.get('/products/:productId', requireAuth, getOneProduct);
+  app.get('/products/:productId', getOneProduct);
 
   /**
    * @name POST /products
