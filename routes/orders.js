@@ -92,24 +92,20 @@ module.exports = (app, nextMain) => {
     const data = {
       userId: req.user._id,
       client: req.body.client,
-      // products: req.body.products,
       status: 'pending',
       dateEntry: new Date(),
       dateProcessed: '',
     };
-    data.products = await req.body.products.map(async (objProduct) => {
+    data.products = await Promise.all(req.body.products.map(async (objProduct) => {
       const currentProduct = await connector.get('products', objProduct.product.productId);
-      // console.log(currentProduct);
       const prod = objProduct;
       prod.product = currentProduct;
-      console.log(prod);
       return prod;
-    });
-    console.log('no funca');
+    }));
+
     const orderId = await connector.create('orders', data);
     const newOrder = await connector.get('orders', orderId);
     resp.status(200).send(newOrder);
-
   });
 
   /**
@@ -141,7 +137,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si la orderId con `orderId` indicado no existe
    */
   app.put('/orders/:orderId', requireAuth, (req, resp, next) => {
-    
+
   });
 
   /**
