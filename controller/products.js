@@ -34,9 +34,7 @@ module.exports = {
       next(404);
     }
   },
-  // {401} si no hay cabecera de autenticación - sale cuando intento
-  // ver los productos sin ser admin.
-  // {403} si no es admin este debería salir en cambio.
+
   createProduct: async (req, resp, next) => {
     try {
       const { name, price } = req.body;
@@ -61,6 +59,7 @@ module.exports = {
       next(401);
     }
   },
+
   // {400} si no se indican ninguna propiedad a modificar
   updateProduct: async (req, resp, next) => {
     try {
