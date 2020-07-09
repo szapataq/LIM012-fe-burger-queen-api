@@ -89,23 +89,27 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
   app.post('/orders', requireAuth, async (req, resp, next) => {
-    const { userId, client, products } = req.body;
-
-    if (!userId || !products) {
-      next(400);
-    }
-
     const data = {
-      userId,
-      client,
-      products: [],
+      userId: req.user._id,
+      client: req.body.client,
+      // products: req.body.products,
       status: 'pending',
       dateEntry: new Date(),
       dateProcessed: '',
     };
+    data.products = await req.body.products.map(async (objProduct) => {
+      const currentProduct = await connector.get('products', objProduct.product.productId);
+      // console.log(currentProduct);
+      const prod = objProduct;
+      prod.product = currentProduct;
+      console.log(prod);
+      return prod;
+    });
+    console.log('no funca');
     const orderId = await connector.create('orders', data);
     const newOrder = await connector.get('orders', orderId);
-    resp.status(201).send(newOrder);
+    resp.status(200).send(newOrder);
+
   });
 
   /**
