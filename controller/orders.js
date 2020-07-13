@@ -1,9 +1,5 @@
-// const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
-// const {
-//   isAdmin,
-//   isAuthenticated,
-// } = require('../middleware/auth');
+
 const {
   linksPagination,
 } = require('../utils/utils');
