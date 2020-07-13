@@ -6,8 +6,6 @@ const {
 const connector = new MongoLib();
 
 module.exports = {
-  // @code {401} si no hay cabecera de autenticación - sale cuando intento
-  // ver los productos sin ser admin.
   getProducts: async (req, resp, next) => {
     try {
       const { query } = req;
@@ -22,11 +20,11 @@ module.exports = {
       next(401);
     }
   },
-  // @code {401} si no hay cabecera de autenticación - sale cuando intento
-  // ver los productos sin ser admin.
+
   getOneProduct: async (req, resp, next) => {
+    const paramId = req.params.productId;
+
     try {
-      const paramId = req.params.productId;
       const oneProduct = await connector.get('products', paramId);
       if (!oneProduct) return next(404);
       resp.send(oneProduct);
@@ -36,9 +34,9 @@ module.exports = {
   },
 
   createProduct: async (req, resp, next) => {
-    try {
-      const { name, price } = req.body;
+    const { name, price } = req.body;
 
+    try {
       if (!name || !price) return next(400);
 
       const data = {
@@ -47,7 +45,7 @@ module.exports = {
         image: req.body.image,
         type: req.body.type,
         dateEntry: new Date(),
-        status: {
+        statusElem: {
           isActive: true,
         },
       };
@@ -60,21 +58,16 @@ module.exports = {
     }
   },
 
-  // {400} si no se indican ninguna propiedad a modificar
   updateProduct: async (req, resp, next) => {
-    const { name, price, image, type } = req.body;
-    // if (name || price || image || type) {
-      
-    // }
+    const data = req.body;
+    const paramId = req.params.productId;
+
     try {
-      const paramId = req.params.productId;
-      const data = {
-        name,
-        price,
-        image,
-        type,
-        dateEntry: new Date(),
-      };
+      const prod = await connector.get('products', paramId);
+      delete prod._id;
+
+      if (Object.keys(data).length === 0
+      || JSON.stringify(data) === JSON.stringify(prod)) return next(400);
 
       const productId = await connector.update('products', paramId, data);
       const product = await connector.get('products', productId);
@@ -85,9 +78,10 @@ module.exports = {
       next(404);
     }
   },
+
   deleteProduct: async (req, resp, next) => {
+    const paramId = req.params.productId;
     try {
-      const paramId = req.params.productId;
       const product = await connector.get('products', paramId);
       await connector.delete('products', paramId);
       if (!product) return next(404);

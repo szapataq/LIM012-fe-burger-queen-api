@@ -261,6 +261,8 @@
     - [ ] [async y await]()
     - [ ] [try, catch]()
 
+ ####
+ - [ ] spawn
 
 - [ ] [Códigos de status HTTP]()
 - [ ] [Encodings y JSON]()
