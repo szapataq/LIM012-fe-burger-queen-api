@@ -62,13 +62,17 @@ module.exports = {
 
   // {400} si no se indican ninguna propiedad a modificar
   updateProduct: async (req, resp, next) => {
+    const { name, price, image, type } = req.body;
+    // if (name || price || image || type) {
+      
+    // }
     try {
       const paramId = req.params.productId;
       const data = {
-        name: req.body.name,
-        price: req.body.price,
-        image: req.body.image,
-        type: req.body.type,
+        name,
+        price,
+        image,
+        type,
         dateEntry: new Date(),
       };
 
