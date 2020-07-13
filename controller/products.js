@@ -45,7 +45,7 @@ module.exports = {
         image: req.body.image,
         type: req.body.type,
         dateEntry: new Date(),
-        status: {
+        statusElem: {
           isActive: true,
         },
       };
