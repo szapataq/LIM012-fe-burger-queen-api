@@ -89,19 +89,18 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
   app.post('/orders', requireAuth, async (req, resp, next) => {
+    const { products, client } = req.body;
     const data = {
       userId: req.user._id,
-      client: req.body.client,
+      client,
       status: 'pending',
       dateEntry: new Date(),
       dateProcessed: '',
     };
-    data.products = await Promise.all(req.body.products.map(async (objProduct) => {
-      const currentProduct = await connector.get('products', objProduct.product.productId);
-      const prod = objProduct;
-      prod.product = currentProduct;
-      return prod;
-    }));
+
+    data.products = await Promise.all(products.map((objProduct) => connector
+      .get('products', objProduct.product._id)
+      .then((prod) => ({ qty: objProduct.qty, prod }))));
 
     const orderId = await connector.create('orders', data);
     const newOrder = await connector.get('orders', orderId);
