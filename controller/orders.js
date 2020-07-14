@@ -30,6 +30,7 @@ module.exports = {
 
   getOneOrder: async (req, resp, next) => {
     const paramId = req.params.orderId;
+
     try {
       const oneOrder = await connector.get('orders', paramId);
       if (!oneOrder) return next(404);
@@ -94,10 +95,12 @@ module.exports = {
 
   deleteOrder: async (req, resp, next) => {
     const paramId = req.params.orderId;
+
     try {
       const order = await connector.get('orders', paramId);
       await connector.delete('orders', paramId);
-      if (!order) return next(404);
+      if (!order || order.statusElem.isActive === false) return next(404);
+
       resp.send(order);
     } catch (error) {
       next(404);
