@@ -7,11 +7,16 @@ const connector = new MongoLib();
 
 module.exports = {
   getProducts: async (req, resp, next) => {
+    const { query } = req;
+
+    const internalQuery = {
+      statusElem: { isActive: true },
+    };
+
     try {
-      const { query } = req;
       const allProducts = query
-        ? await connector.pagination('products', parseInt(query.limit, 0), parseInt(query.page, 0))
-        : await connector.getAll('products');
+        ? await connector.pagination('products', parseInt(query.limit, 0), parseInt(query.page, 0), internalQuery)
+        : await connector.getAll('products', internalQuery);
 
       const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('products')).length);
       resp.set(links);
@@ -81,6 +86,7 @@ module.exports = {
 
   deleteProduct: async (req, resp, next) => {
     const paramId = req.params.productId;
+
     try {
       const product = await connector.get('products', paramId);
       await connector.delete('products', paramId);
