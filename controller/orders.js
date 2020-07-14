@@ -8,11 +8,16 @@ const connector = new MongoLib();
 
 module.exports = {
   getAllOrders: async (req, resp, next) => {
+    const { query } = req;
+
+    const internalQuery = {
+      statusElem: { isActive: true },
+    };
+
     try {
-      const { query } = req;
       const allOrders = query
-        ? await connector.pagination('orders', parseInt(query.limit, 0), parseInt(query.page, 0))
-        : await connector.getAll('orders');
+        ? await connector.pagination('orders', parseInt(query.limit, 0), parseInt(query.page, 0), internalQuery)
+        : await connector.getAll('orders', internalQuery);
       // console.log(req.get('Referer'));
 
       const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('orders')).length);
