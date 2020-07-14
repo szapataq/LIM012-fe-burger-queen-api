@@ -23,23 +23,29 @@ const getUserIdOrEmail = async (req) => {
 };
 
 module.exports = {
-  getUsers: async (req, resp) => {
+  getUsers: async (req, resp, next) => {
     const {
       query,
     } = req;
-    const allUsers = query
-      ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
-      : await connector.getAll('users');
-    // console.log(req.get('Referer'));
 
-    const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('users')).length);
-    resp.set(links);
-    resp.send(allUsers);
+    try {
+      const allUsers = query
+        ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
+        : await connector.getAll('users');
+        // console.log(req.get('Referer'));
+
+      const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('users')).length);
+      resp.set(links);
+      resp.send(allUsers);
+    } catch (error) {
+      next(403);
+    }
   },
 
   getOneUser: async (req, resp, next) => {
+    const { uid } = req.params;
+
     try {
-      const { uid } = req.params;
       if (isAdmin(req) && isAuthenticated(req)) {
         const oneUser = await getUserIdOrEmail(uid);
         if (!oneUser) {
@@ -67,44 +73,47 @@ module.exports = {
       roles,
     } = req.body;
 
-    if (!email || !password) {
-      next(400);
-    }
-    let currentRol;
-    if (roles) {
-      currentRol = roles.admin;
-    } else {
-      currentRol = false;
-    }
-    const data = {
-      email: req.body.email.toLowerCase(),
-      password: bcrypt.hashSync(password, 10),
-      roles: {
-        admin: currentRol,
-      },
-      // status: {
-      //   isActive: true,
-      // },
-    };
+    try {
+      if (!email || !password) return next(400);
 
-    if (!regExpEmail.test(data.email)) {
-      next(400);
-    } else {
-      const existUser = await connector.getUser('users', data.email);
-      if (existUser) {
-        next(403);
+      let currentRol;
+
+      if (roles) {
+        currentRol = roles.admin;
       } else {
-        const uid = await connector.create('users', data);
-        const user = await connector.get('users', uid);
-        resp.status(200).send(user);
+        currentRol = false;
       }
+
+      const data = {
+        email: req.body.email.toLowerCase(),
+        password: bcrypt.hashSync(password, 10),
+        roles: {
+          admin: currentRol,
+        },
+      };
+
+      if (!regExpEmail.test(data.email)) {
+        next(400);
+      } else {
+        const existUser = await connector.getUser('users', data.email);
+        if (existUser) {
+          next(403);
+        } else {
+          const uid = await connector.create('users', data);
+          const user = await connector.get('users', uid);
+          resp.status(200).send(user);
+        }
+      }
+    } catch (error) {
+      next(403);
     }
   },
 
   updateUser: async (req, resp, next) => {
+    const { uid } = req.params;
+
     try {
       if (isAdmin(req) && isAuthenticated(req)) {
-        const { uid } = req.params;
         const oneUser = await getUserIdOrEmail(uid);
 
         const {
@@ -145,9 +154,10 @@ module.exports = {
   },
 
   deleteUser: async (req, resp, next) => {
+    const { uid } = req.params;
+    const { _id, email } = req.user;
+
     try {
-      const { uid } = req.params;
-      const { _id, email } = req.user;
       if ((isAdmin(req) && isAuthenticated(req)) || (isAuthenticated(req) && (uid === String(_id)
       || uid === email))) {
         const oneUser = await getUserIdOrEmail(uid);
