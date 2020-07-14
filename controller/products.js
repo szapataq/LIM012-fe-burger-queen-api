@@ -90,7 +90,7 @@ module.exports = {
     try {
       const product = await connector.get('products', paramId);
       await connector.delete('products', paramId);
-      if (!product) return next(404);
+      if (!product || product.statusElem.isActive === false) return next(404);
       resp.send(product);
     } catch (error) {
       next(404);
