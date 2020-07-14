@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
 const {
@@ -149,7 +148,8 @@ module.exports = {
     try {
       const { uid } = req.params;
       const { _id, email } = req.user;
-      if ((isAdmin(req) && isAuthenticated(req)) || (isAuthenticated(req) && (uid === String(_id) || uid === email))) {
+      if ((isAdmin(req) && isAuthenticated(req)) || (isAuthenticated(req) && (uid === String(_id)
+      || uid === email))) {
         const oneUser = await getUserIdOrEmail(uid);
         await connector.deleteOne('users', oneUser._id);
         if (!oneUser) next(404);
