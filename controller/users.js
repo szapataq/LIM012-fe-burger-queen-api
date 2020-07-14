@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
 const {
@@ -82,9 +83,9 @@ module.exports = {
       roles: {
         admin: currentRol,
       },
-      status: {
-        isActive: true,
-      },
+      // status: {
+      //   isActive: true,
+      // },
     };
 
     if (!regExpEmail.test(data.email)) {
@@ -146,16 +147,16 @@ module.exports = {
 
   deleteUser: async (req, resp, next) => {
     try {
-      const {
-        uid,
-      } = req.params;
-      const oneUser = await getUserIdOrEmail(uid);
-      const deletedUser = await connector.delete('users', oneUser._id);
-      const user = await connector.get('users', deletedUser);
-      if (!user) {
-        next(404);
+      const { uid } = req.params;
+      const { _id, email } = req.user;
+      if ((isAdmin(req) && isAuthenticated(req)) || (isAuthenticated(req) && (uid === String(_id) || uid === email))) {
+        const oneUser = await getUserIdOrEmail(uid);
+        await connector.deleteOne('users', oneUser._id);
+        if (!oneUser) next(404);
+        resp.send(oneUser);
+      } else {
+        next(403);
       }
-      resp.send(user);
     } catch (error) {
       next(404);
     }
