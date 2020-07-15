@@ -8,11 +8,16 @@ const connector = new MongoLib();
 
 module.exports = {
   getAllOrders: async (req, resp, next) => {
+    const { query } = req;
+
+    const internalQuery = {
+      statusElem: { isActive: true },
+    };
+
     try {
-      const { query } = req;
       const allOrders = query
-        ? await connector.pagination('orders', parseInt(query.limit, 0), parseInt(query.page, 0))
-        : await connector.getAll('orders');
+        ? await connector.pagination('orders', parseInt(query.limit, 0), parseInt(query.page, 0), internalQuery)
+        : await connector.getAll('orders', internalQuery);
       // console.log(req.get('Referer'));
 
       const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('orders')).length);
@@ -25,6 +30,7 @@ module.exports = {
 
   getOneOrder: async (req, resp, next) => {
     const paramId = req.params.orderId;
+
     try {
       const oneOrder = await connector.get('orders', paramId);
       if (!oneOrder) return next(404);
@@ -89,10 +95,12 @@ module.exports = {
 
   deleteOrder: async (req, resp, next) => {
     const paramId = req.params.orderId;
+
     try {
       const order = await connector.get('orders', paramId);
       await connector.delete('orders', paramId);
-      if (!order) return next(404);
+      if (!order || order.statusElem.isActive === false) return next(404);
+
       resp.send(order);
     } catch (error) {
       next(404);
