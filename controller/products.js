@@ -39,16 +39,21 @@ module.exports = {
   },
 
   createProduct: async (req, resp, next) => {
-    const { name, price } = req.body;
+    const {
+      name,
+      price,
+      image,
+      type,
+    } = req.body;
 
     try {
-      if (!name || !price) return next(400);
+      if (!name || !price || (typeof (price) !== 'number')) return next(400);
 
       const data = {
-        name: req.body.name,
-        price: req.body.price,
-        image: req.body.image,
-        type: req.body.type,
+        name,
+        price,
+        image,
+        type,
         dateEntry: new Date(),
         statusElem: {
           isActive: true,
@@ -72,7 +77,8 @@ module.exports = {
       delete prod._id;
 
       if (Object.keys(data).length === 0
-      || JSON.stringify(data) === JSON.stringify(prod)) return next(400);
+      || JSON.stringify(data) === JSON.stringify(prod)
+      || (typeof (data.price) !== 'number')) return next(400);
 
       const productId = await connector.update('products', paramId, data);
       const product = await connector.get('products', productId);
