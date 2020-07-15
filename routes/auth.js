@@ -34,7 +34,7 @@ module.exports = (app, nextMain) => {
         } else if (!bcrypt.compareSync(password, doc.password)) {
           next(400);
         } else {
-          const token = jwt.sign({ uid: doc._id }, jwtSecret); // { expiresIn: 60 * 60 * 24 }
+          const token = jwt.sign({ uid: doc._id }, jwtSecret, { expiresIn: 60 * 60 * 24 });
           return resp.status(200).send({ token });
         }
       });
