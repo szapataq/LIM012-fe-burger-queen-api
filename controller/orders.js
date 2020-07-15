@@ -81,7 +81,7 @@ module.exports = {
 
       if (Object.keys(data).length === 0
       || JSON.stringify(data) === JSON.stringify(order)
-      || !statusOrder.includes(data.status)) return next(400);
+      || (!statusOrder.includes(data.status) && !data.client)) return next(400);
 
       const orderId = await connector.update('orders', paramId, data);
       const ord = await connector.get('orders', orderId);
