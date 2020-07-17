@@ -74,11 +74,9 @@ module.exports = {
     } = req.body;
 
     try {
-      if (!email || !password) return next(400);
-      if (password.length <= 3) return next(400);
+      if ((!email || !password) || (password.length <= 3)) return next(400);
 
       let currentRol;
-
       if (roles) {
         currentRol = roles.admin;
       } else {
@@ -86,7 +84,7 @@ module.exports = {
       }
 
       const data = {
-        email: req.body.email.toLowerCase(),
+        email: email.toLowerCase(),
         password: bcrypt.hashSync(password, 10),
         roles: {
           admin: currentRol,
@@ -102,6 +100,7 @@ module.exports = {
         } else {
           const uid = await connector.create('users', data);
           const user = await connector.get('users', uid);
+          console.log(user);
           resp.status(200).send(user);
         }
       }
