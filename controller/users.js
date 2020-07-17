@@ -75,6 +75,7 @@ module.exports = {
 
     try {
       if (!email || !password) return next(400);
+      if (password.length <= 3) return next(400);
 
       let currentRol;
 
