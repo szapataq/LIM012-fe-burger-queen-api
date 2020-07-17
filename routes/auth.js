@@ -30,7 +30,7 @@ module.exports = (app, nextMain) => {
     connector.getUser('users', email)
       .then((doc) => {
         if (!doc) {
-          next(400);
+          next(404);
         } else if (!bcrypt.compareSync(password, doc.password)) {
           next(400);
         } else {

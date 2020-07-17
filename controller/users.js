@@ -74,7 +74,7 @@ module.exports = {
     } = req.body;
 
     try {
-      if (!email || !password || password.length < 6) return next(400);
+      if (!email || !password || password.length <= 3) return next(400);
 
       let currentRol;
 
