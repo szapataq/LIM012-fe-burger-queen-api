@@ -67,11 +67,7 @@ module.exports = {
   },
 
   createUser: async (req, resp, next) => {
-    const {
-      email,
-      password,
-      roles,
-    } = req.body;
+    const { email, password, roles } = req.body;
 
     try {
       if ((!email || !password) || (password.length <= 3)) return next(400);
@@ -100,12 +96,15 @@ module.exports = {
         } else {
           const uid = await connector.create('users', data);
           const user = await connector.get('users', uid);
-          console.log(user);
-          resp.status(200).send(user);
+          resp.send({
+            _id: user._id.toString(),
+            email: user.email,
+            roles: user.roles,
+          });
         }
       }
     } catch (error) {
-      next(403);
+      next(404);
     }
   },
 
