@@ -62,7 +62,7 @@ module.exports = {
 
       const id = await connector.create('products', data);
       const product = await connector.get('products', id);
-      resp.status(201).send(product);
+      resp.status(200).send(product);
     } catch (error) {
       next(401);
     }
