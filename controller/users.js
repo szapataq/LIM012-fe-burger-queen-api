@@ -109,39 +109,35 @@ module.exports = {
   },
 
   updateUser: async (req, resp, next) => {
+    const data = req.body;
     const { uid } = req.params;
 
     try {
       if (isAdmin(req) && isAuthenticated(req)) {
         const oneUser = await getUserIdOrEmail(uid);
 
-        const {
-          email,
-          password,
-        } = req.body;
-        if (!email || !password) {
-          next(400);
-        }
-        const data = {
-          email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
-          roles: req.body.roles,
-        };
+        const currentUser = await connector.get('users', uid);
+        delete currentUser._id;
+
+        if (!data.email || !data.password || Object.keys(data).length === 0
+        || JSON.stringify(data) === JSON.stringify(currentUser)) return next(400);
+
         const updateUser = await connector.update('users', oneUser._id, data);
         const user = await connector.get('users', updateUser);
-        if (!user) {
-          next(404);
-        }
+
+        if (!user) return next(404);
         resp.send(user);
       } else if (isAuthenticated(req)) {
         const { uid } = req.params;
         const { _id, email } = req.user;
+
         if (uid !== String(_id) && uid !== email) next(403);
 
         const oneUser = await getUserIdOrEmail(uid);
         const data = { password: bcrypt.hashSync(req.body.password, 10) };
         const updateUser = await connector.update('users', oneUser._id, data);
         const user = await connector.get('users', updateUser);
+
         if (!user) next(404);
         resp.send(user);
       } else {
