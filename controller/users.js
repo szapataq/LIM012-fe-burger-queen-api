@@ -110,40 +110,37 @@ module.exports = {
 
   updateUser: async (req, resp, next) => {
     const data = req.body;
-    const { uid } = req.params;
+    const paramId = req.params.uid;
+    const field = Object.keys(data);
 
     try {
-      if (isAdmin(req) && isAuthenticated(req)) {
-        const oneUser = await getUserIdOrEmail(uid);
+      const oneUser = await getUserIdOrEmail(paramId);
+      if (!oneUser) return next(404);
 
-        const currentUser = await connector.get('users', uid);
-        delete currentUser._id;
+      const currentUser = await connector.get('users', req.user._id);
+      delete currentUser._id;
 
-        if (!data.email || !data.password || Object.keys(data).length === 0
-        || JSON.stringify(data) === JSON.stringify(currentUser)) return next(400);
+      const noEmailNoPass = !data.email && !data.password;
+      const emptyObj = Object.keys(data).length === 0;
+      const nothingChanged = JSON.stringify(data) === JSON.stringify(currentUser);
 
-        const updateUser = await connector.update('users', oneUser._id, data);
-        const user = await connector.get('users', updateUser);
+      const noAdmin = !isAdmin(req);
+      const notSameUserId = paramId !== String(data._id);
+      const notSameUserEmail = paramId !== data.email;
+      const rolesField = field.includes('roles');
 
-        if (!user) return next(404);
-        resp.send(user);
-      } else if (isAuthenticated(req)) {
-        const { uid } = req.params;
-        const { _id, email } = req.user;
+      if (emptyObj) return next(400);
+      if (noAdmin && (notSameUserId || notSameUserEmail)) return next(403);
+      if ((noAdmin && rolesField)) return next(403);
+      if (noEmailNoPass || nothingChanged) return next(400);
 
-        if (uid !== String(_id) && uid !== email) next(403);
+      const updateUser = await connector.update('users', oneUser._id, data);
+      const user = await connector.get('users', updateUser);
 
-        const oneUser = await getUserIdOrEmail(uid);
-        const data = { password: bcrypt.hashSync(req.body.password, 10) };
-        const updateUser = await connector.update('users', oneUser._id, data);
-        const user = await connector.get('users', updateUser);
-
-        if (!user) next(404);
-        resp.send(user);
-      } else {
-        next(403);
-      }
+      if (!user) return next(404);
+      resp.send(user);
     } catch (error) {
+      console.log(error);
       next(404);
     }
   },
