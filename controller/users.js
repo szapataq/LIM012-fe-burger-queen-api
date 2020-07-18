@@ -71,13 +71,7 @@ module.exports = {
 
     try {
       if ((!email || !password) || (password.length <= 3)) return next(400);
-
-      let currentRol;
-      if (roles) {
-        currentRol = roles.admin;
-      } else {
-        currentRol = false;
-      }
+      const currentRol = roles ? roles.admin : false;
 
       const data = {
         email: email.toLowerCase(),
