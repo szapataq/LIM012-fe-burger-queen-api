@@ -33,7 +33,7 @@ module.exports = {
 
     try {
       const oneOrder = await connector.get('orders', paramId);
-      if (!oneOrder) return next(404);
+      if (!oneOrder || !oneOrder.statusElem.isActive) return next(404);
       resp.send(oneOrder);
     } catch (error) {
       next(404);
@@ -99,7 +99,7 @@ module.exports = {
     try {
       const order = await connector.get('orders', paramId);
       await connector.delete('orders', paramId);
-      if (!order || order.statusElem.isActive === false) return next(404);
+      if (!order || !order.statusElem.isActive) return next(404);
 
       resp.send(order);
     } catch (error) {

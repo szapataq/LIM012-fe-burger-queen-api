@@ -31,7 +31,7 @@ module.exports = {
 
     try {
       const oneProduct = await connector.get('products', paramId);
-      if (!oneProduct || oneProduct.statusElem.isActive !== true) return next(404);
+      if (!oneProduct || !oneProduct.statusElem.isActive) return next(404);
       resp.send(oneProduct);
     } catch (error) {
       next(404);
@@ -96,7 +96,7 @@ module.exports = {
     try {
       const product = await connector.get('products', paramId);
       await connector.delete('products', paramId);
-      if (!product || product.statusElem.isActive === false) return next(404);
+      if (!product || !product.statusElem.isActive) return next(404);
       resp.send(product);
     } catch (error) {
       next(404);
