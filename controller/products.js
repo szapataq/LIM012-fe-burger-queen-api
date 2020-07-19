@@ -31,7 +31,7 @@ module.exports = {
 
     try {
       const oneProduct = await connector.get('products', paramId);
-      if (!oneProduct) return next(404);
+      if (!oneProduct || oneProduct.statusElem.isActive !== true) return next(404);
       resp.send(oneProduct);
     } catch (error) {
       next(404);
