@@ -209,7 +209,7 @@ describe('PUT /users/:uid', () => {
   ));
 
   it('should fail with 403 when not owner nor admin', () => (
-    fetchAsTestUser(`/users/${config.adminEmail}`, { method: 'PUT' })
+    fetchAsTestUser(`/users/${config.adminEmail}`, { method: 'PUT', body: { password: 'garmadon' } })
       .then((resp) => expect(resp.status).toBe(403))
   ));
 
