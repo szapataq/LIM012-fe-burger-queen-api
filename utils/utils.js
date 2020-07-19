@@ -1,16 +1,17 @@
-const linksPagination = (url, limit, page, total) => {
+const linksPagination = (url, page, limit, total) => {
+
   const prevPage = page > 1 ? (parseInt(page, 0) - 1) : 1;
   const nextPage = limit * page < total ? parseInt(page, 0) + 1 : Math.ceil(total / limit);
   const lastPage = Math.ceil(total / limit);
 
   const link = {
-    first: `${url}?limit=${limit}&page=1`,
-    prev: `${url}?limit=${limit}&page=${prevPage}`,
-    next: `${url}?limit=${limit}&page=${nextPage}`,
-    last: `${url}?limit=${limit}&page=${lastPage}`,
+    first: `<${url}?limit=${limit}&page=1>; rel="first"`,
+    prev: `<${url}?limit=${limit}&page=${prevPage}>; rel="prev"`,
+    next: `<${url}?limit=${limit}&page=${nextPage}>; rel="next"`,
+    last: `<${url}?limit=${limit}&page=${lastPage}>; rel="last"`,
   };
 
-  return link;
+  return `${link.first}, ${link.prev}, ${link.next}, ${link.last}`;
 };
 
 const regExpEmail = RegExp('^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$');
