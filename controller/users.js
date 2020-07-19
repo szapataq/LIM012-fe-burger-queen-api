@@ -24,18 +24,21 @@ const getUserIdOrEmail = async (req) => {
 
 module.exports = {
   getUsers: async (req, resp, next) => {
-    const {
-      query,
-    } = req;
+    const { page, limit } = req.query;
 
     try {
-      const allUsers = query
-        ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
-        : await connector.getAll('users');
-        // console.log(req.get('Referer'));
+      // const allUsers = query
+      //   ? await connector.pagination('users', parseInt(query.limit, 0), parseInt(query.page, 0))
+      //   : await connector.getAll('users');
+      // console.log(req.get('Referer'));
 
-      const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('users')).length);
-      resp.set(links);
+      const pageCurrent = parseInt(page, 10) || 1;
+      const limitCurrent = parseInt(limit, 10) || 10;
+      const url = `${req.protocol}://${req.get('host')}${req.path}`;
+      // const allUsers = await connector.getAll('users');
+      const links = linksPagination(url, pageCurrent, limitCurrent, (await connector.getAll('users')).length);
+      resp.set('link', links);
+      const allUsers = await connector.pagination('users', parseInt(pageCurrent, 0), parseInt(limitCurrent, 0));
       resp.send(allUsers);
     } catch (error) {
       next(403);
@@ -71,13 +74,7 @@ module.exports = {
 
     try {
       if ((!email || !password) || (password.length <= 3)) return next(400);
-
-      let currentRol;
-      if (roles) {
-        currentRol = roles.admin;
-      } else {
-        currentRol = false;
-      }
+      const currentRol = roles ? roles.admin : false;
 
       const data = {
         email: email.toLowerCase(),
@@ -147,7 +144,7 @@ module.exports = {
       if (!user) return next(404);
       resp.send(user);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       next(404);
     }
   },
