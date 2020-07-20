@@ -52,7 +52,7 @@ module.exports = {
         client,
         products: await Promise.all(products.map((objProduct) => connector
           .get('products', objProduct.productId)
-          .then((prod) => ({ qty: objProduct.qty, prod })))),
+          .then((product) => ({ qty: objProduct.qty, product })))),
         status: 'pending',
         dateEntry: new Date(),
         dateProcessed: '',
