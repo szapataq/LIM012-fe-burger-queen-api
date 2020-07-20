@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
+const MongoLibMock = require('../mocks/mongoMock');
+require('dotenv').config();
+
 const {
   isAdmin,
   isAuthenticated,
@@ -9,7 +12,9 @@ const {
   regExpEmail,
 } = require('../utils/utils');
 
-const connector = new MongoLib();
+const connector = process.env.NODE_ENV.trim() === 'test'
+  ? new MongoLibMock()
+  : new MongoLib();
 
 const getUserIdOrEmail = async (req) => {
   let oneUser;
