@@ -15,10 +15,10 @@ module.exports = {
 
     try {
       const allProducts = query
-        ? await connector.pagination('products', parseInt(query.limit, 0), parseInt(query.page, 0), internalQuery)
+        ? await connector.pagination('products', parseInt(query.page, 0), parseInt(query.limit, 0), internalQuery)
         : await connector.getAll('products', internalQuery);
 
-      const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('products')).length);
+      const links = linksPagination(req.get('Referer'), query.page, query.limit, (await connector.getAll('products')).length);
       resp.set(links);
       resp.send(allProducts);
     } catch (error) {
