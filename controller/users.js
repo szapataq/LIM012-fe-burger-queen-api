@@ -122,14 +122,21 @@ module.exports = {
       const nothingChanged = JSON.stringify(data) === JSON.stringify(currentUser);
 
       const noAdmin = !isAdmin(req);
-      const notSameUserId = paramId !== String(data._id);
-      const notSameUserEmail = paramId !== data.email;
+      const notSameUserId = paramId !== String(req.user._id);
+      const notSameUserEmail = paramId !== req.user.email;
       const rolesField = field.includes('roles');
 
       if (emptyObj) return next(400);
-      if (noAdmin && (notSameUserId || notSameUserEmail)) return next(403);
+      if (noAdmin && (notSameUserId && notSameUserEmail)) return next(403);
       if ((noAdmin && rolesField)) return next(403);
       if (noEmailNoPass || nothingChanged) return next(400);
+
+      if (data.password) {
+        data.password = bcrypt.hashSync(data.password, 10);
+      }
+      if (data.email) {
+        data.email = data.email.toLowerCase();
+      }
 
       const updateUser = await connector.update('users', oneUser._id, data);
       const user = await connector.get('users', updateUser);

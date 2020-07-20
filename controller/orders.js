@@ -33,7 +33,7 @@ module.exports = {
 
     try {
       const oneOrder = await connector.get('orders', paramId);
-      if (!oneOrder) return next(404);
+      if (!oneOrder || !oneOrder.statusElem.isActive) return next(404);
       resp.send(oneOrder);
     } catch (error) {
       next(404);
@@ -51,8 +51,8 @@ module.exports = {
         userId: req.user._id,
         client,
         products: await Promise.all(products.map((objProduct) => connector
-          .get('products', objProduct.product._id)
-          .then((prod) => ({ qty: objProduct.qty, prod })))),
+          .get('products', objProduct.productId)
+          .then((product) => ({ qty: objProduct.qty, product })))),
         status: 'pending',
         dateEntry: new Date(),
         dateProcessed: '',
@@ -77,7 +77,7 @@ module.exports = {
       const order = await connector.get('orders', paramId);
       delete order._id;
 
-      const statusOrder = ['pending', 'canceled', 'delivering', 'delivered'];
+      const statusOrder = ['pending', 'canceled', 'delivering', 'delivered', 'preparing'];
 
       if (Object.keys(data).length === 0
       || JSON.stringify(data) === JSON.stringify(order)
@@ -99,7 +99,7 @@ module.exports = {
     try {
       const order = await connector.get('orders', paramId);
       await connector.delete('orders', paramId);
-      if (!order || order.statusElem.isActive === false) return next(404);
+      if (!order || !order.statusElem.isActive) return next(404);
 
       resp.send(order);
     } catch (error) {
