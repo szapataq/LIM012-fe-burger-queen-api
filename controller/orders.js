@@ -51,7 +51,7 @@ module.exports = {
         userId: req.user._id,
         client,
         products: await Promise.all(products.map((objProduct) => connector
-          .get('products', objProduct.product._id)
+          .get('products', objProduct.productId)
           .then((prod) => ({ qty: objProduct.qty, prod })))),
         status: 'pending',
         dateEntry: new Date(),
@@ -77,7 +77,7 @@ module.exports = {
       const order = await connector.get('orders', paramId);
       delete order._id;
 
-      const statusOrder = ['pending', 'canceled', 'delivering', 'delivered'];
+      const statusOrder = ['pending', 'canceled', 'delivering', 'delivered', 'preparing'];
 
       if (Object.keys(data).length === 0
       || JSON.stringify(data) === JSON.stringify(order)
