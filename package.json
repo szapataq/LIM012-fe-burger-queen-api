@@ -8,6 +8,7 @@
   },
   "scripts": {
     "pretest": "eslint .",
+    "dev": "nodemon index.js",
     "start": "node index.js",
     "test:e2e": "jest --verbose --testPathPattern e2e --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
     "test:unit": "jest --verbose --testPathIgnorePatterns e2e",
@@ -27,6 +28,7 @@
     "mongoose": "^5.9.24"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.1",
     "docdash": "1.1.1",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
