@@ -16,11 +16,11 @@ module.exports = {
 
     try {
       const allOrders = query
-        ? await connector.pagination('orders', parseInt(query.limit, 0), parseInt(query.page, 0), internalQuery)
+        ? await connector.pagination('orders', parseInt(query.page, 0), parseInt(query.limit, 0), internalQuery)
         : await connector.getAll('orders', internalQuery);
       // console.log(req.get('Referer'));
 
-      const links = linksPagination(req.get('Referer'), query.limit, query.page, (await connector.getAll('orders')).length);
+      const links = linksPagination(req.get('Referer'), query.page, query.limit, (await connector.getAll('orders')).length);
       resp.set(links);
       resp.send(allOrders);
     } catch (error) {
