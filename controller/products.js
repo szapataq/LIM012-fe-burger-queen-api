@@ -1,5 +1,4 @@
 const MongoLib = require('../lib/mongo');
-const MongoLibMock = require('../mocks/mongoMock');
 require('dotenv').config();
 
 const {
