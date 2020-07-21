@@ -1,8 +1,12 @@
 const {
-  getProducts, getOneProduct, createProduct, updateProduct, deleteProduct
-} = require('../../controller/products');
+  getProducts,
+  getOneProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct
+} = require('../products');
 
-describe('getUsers', () => {
+describe('get all products', () => {
   it('should get users collection', (done) => {
     done();
   });

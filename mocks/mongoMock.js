@@ -1,38 +1,39 @@
+const { MongoMemoryServer } = require('mongodb-memory-server');
+require('dotenv').config();
 const {
   MongoClient,
   ObjectId,
 } = require('mongodb');
-const config = require('../config');
-require('dotenv').config();
 
-const USER = encodeURIComponent(config.dbUser);
-const PASSWORD = encodeURIComponent(config.dbPassword);
-const DB_NAME = config.dbName;
+const mongod = new MongoMemoryServer();
 
-const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${config.dbHost}/${DB_NAME}?retryWrites=true&w=majority`;
-
-class MongoLib {
-  constructor() {
-    this.client = new MongoClient(MONGO_URI, {
-      useUnifiedTopology: true,
-    });
-    this.dbName = DB_NAME;
-  }
-
-  connect() {
+class MongoLibMock {
+  async connect() {
     console.log(process.env.NODE_ENV); // eslint-disable-line
-    if (!MongoLib.connection) {
-      MongoLib.connection = new Promise((resolve, reject) => {
+    if (!this.client) {
+      const MONGO_URI = await mongod.getUri();
+      this.client = new MongoClient(MONGO_URI, {
+        useUnifiedTopology: true,
+      });
+    }
+
+    if (!this.dbName) {
+      const DB_NAME = await mongod.getDbName();
+      this.dbName = DB_NAME;
+    }
+
+    if (!MongoLibMock.connection) {
+      MongoLibMock.connection = new Promise((resolve, reject) => {
         this.client.connect((err) => {
           if (err) {
             reject(err);
           }
-          console.log('Conexión agregada'); // eslint-disable-line
+          console.log('Conexión agregada Mock'); // eslint-disable-line
           resolve(this.client.db(this.dbName));
         });
       });
     }
-    return MongoLib.connection;
+    return MongoLibMock.connection;
   }
 
   getAll(collection, query) {
@@ -88,16 +89,6 @@ class MongoLib {
       _id: ObjectId(id),
     })).then(() => id);
   }
-
-  // getMaxCod(collection) {
-  //   return this.connect().then((db) => db.collection(collection).aggregate([
-  //     { $group: { _id: null, maximo: { $max: '$cod' } } },
-  //   ], { cursor: { batchSize: 1 } }));
-  // }
-
-  close() {
-    this.client.close();
-  }
 }
 
-module.exports = MongoLib;
+module.exports = MongoLibMock;

@@ -2,8 +2,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { jwtSecret } = require('../config');
 const MongoLib = require('../lib/mongo');
+const MongoLibMock = require('../mocks/mongoMock');
+require('dotenv').config();
 
-const connector = new MongoLib();
+const connector = process.env.NODE_ENV.trim() === 'test'
+  ? new MongoLibMock()
+  : new MongoLib();
 
 /** @module auth */
 module.exports = (app, nextMain) => {
