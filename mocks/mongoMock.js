@@ -9,7 +9,6 @@ const mongod = new MongoMemoryServer();
 
 class MongoLibMock {
   async connect() {
-    console.log(process.env.NODE_ENV); // eslint-disable-line
     if (!this.client) {
       const MONGO_URI = await mongod.getUri();
       this.client = new MongoClient(MONGO_URI, {
