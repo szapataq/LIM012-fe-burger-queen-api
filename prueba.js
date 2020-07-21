@@ -28,6 +28,15 @@ const connector = new MongoLib();
 // connector.delete('test', '5ef7965690a45c1b3859a132')
 //   .then(console.log);
 
-// {"_id":{"$oid":"5ef7965690a45c1b3859a132"},"email":"test@test.com","password":"123456"}
-connector.pagination('users', 3, 2)
-  .then(console.log);
+// ? paginación
+// connector.pagination('users', 3, 2)
+//   .then(console.log);
+
+// ? consultando el máximo
+// connector.getMaxCod('users')
+//   .then(async (res) => {
+
+//     const { maximo } = await res.next();
+//     connector.close();
+//     console.log(maximo);
+//   });
