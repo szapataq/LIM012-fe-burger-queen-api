@@ -1,14 +1,11 @@
 const MongoLib = require('../lib/mongo');
-const MongoLibMock = require('../mocks/mongoMock');
 require('dotenv').config();
 
 const {
   linksPagination,
 } = require('../utils/utils');
 
-const connector = process.env.NODE_ENV.trim() === 'test'
-  ? new MongoLibMock()
-  : new MongoLib();
+const connector = new MongoLib();
 
 module.exports = {
   getAllOrders: async (req, resp, next) => {
