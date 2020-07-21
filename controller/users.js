@@ -77,12 +77,21 @@ module.exports = {
       if ((!email || !password) || (password.length <= 3)) return next(400);
       const currentRol = roles ? roles.admin : false;
 
+      // const cod = (num) => {
+      //   const x = num < 1 ? 1 : num + 1;
+      //   return x;
+      // };
+
+      // const agg = await connector.getMaxCod('users');
+      // const { maximo: max } = await agg.next();
+
       const data = {
         email: email.toLowerCase(),
         password: bcrypt.hashSync(password, 10),
         roles: {
           admin: currentRol,
         },
+        // cod: cod(max),
       };
 
       if (!regExpEmail.test(data.email)) {
