@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
+const MongoLibMock = require('../mocks/mongoMock');
+require('dotenv').config();
+
 const {
   requireAuth,
   requireAdmin,
@@ -9,7 +12,9 @@ const {
   getUsers, getOneUser, createUser, updateUser, deleteUser,
 } = require('../controller/users');
 
-const connector = new MongoLib();
+const connector = process.env.NODE_ENV.trim() === 'test'
+  ? new MongoLibMock()
+  : new MongoLib();
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
@@ -23,6 +28,7 @@ const initAdminUser = (app, next) => {
     roles: {
       admin: true,
     },
+    // cod: 1,
   };
 
   // TODO: crear usuaria admin

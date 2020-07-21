@@ -1,7 +1,11 @@
 const jwt = require('jsonwebtoken');
 const MongoLib = require('../lib/mongo');
+const MongoLibMock = require('../mocks/mongoMock');
+require('dotenv').config();
 
-const connector = new MongoLib();
+const connector = process.env.NODE_ENV.trim() === 'test'
+  ? new MongoLibMock()
+  : new MongoLib();
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;

@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt');
 const MongoLib = require('../lib/mongo');
+const MongoLibMock = require('../mocks/mongoMock');
+require('dotenv').config();
+
 const {
   isAdmin,
   isAuthenticated,
@@ -9,7 +12,9 @@ const {
   regExpEmail,
 } = require('../utils/utils');
 
-const connector = new MongoLib();
+const connector = process.env.NODE_ENV.trim() === 'test'
+  ? new MongoLibMock()
+  : new MongoLib();
 
 const getUserIdOrEmail = async (req) => {
   let oneUser;
@@ -72,12 +77,21 @@ module.exports = {
       if ((!email || !password) || (password.length <= 3)) return next(400);
       const currentRol = roles ? roles.admin : false;
 
+      // const cod = (num) => {
+      //   const x = num < 1 ? 1 : num + 1;
+      //   return x;
+      // };
+
+      // const agg = await connector.getMaxCod('users');
+      // const { maximo: max } = await agg.next();
+
       const data = {
         email: email.toLowerCase(),
         password: bcrypt.hashSync(password, 10),
         roles: {
           admin: currentRol,
         },
+        // cod: cod(max),
       };
 
       if (!regExpEmail.test(data.email)) {
