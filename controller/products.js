@@ -6,9 +6,7 @@ const {
   linksPagination,
 } = require('../utils/utils');
 
-const connector = process.env.NODE_ENV.trim() === 'test'
-  ? new MongoLibMock()
-  : new MongoLib();
+const connector = new MongoLib();
 
 module.exports = {
   getProducts: async (req, resp, next) => {

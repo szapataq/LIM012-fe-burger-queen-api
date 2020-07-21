@@ -2,6 +2,11 @@ const path = require('path');
 const { spawn } = require('child_process');
 const nodeFetch = require('node-fetch');
 const kill = require('tree-kill');
+const setup = require('@shelf/jest-mongodb/setup');
+
+(async () => {
+  await setup();
+})();
 
 const config = require('../config');
 
@@ -106,6 +111,8 @@ module.exports = () => new Promise((resolve, reject) => {
   }
 
   // TODO: Configurar DB de tests
+  console.log(process.env.MONGO_URL, 'mongo url');
+  console.log(global.__MONGO_URI__, 'mongo uriii');
 
   console.info('Staring local server...');
   const child = spawn('npm', ['start', process.env.PORT || 8888], {

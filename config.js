@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const config = {
   port: process.env.PORT || 8080,
-  dbUrl: process.env.DB_URL,
+  dbUrl: process.env.MONGO_URL || process.env.DB_URL,
   dbUser: process.env.DB_USER,
   dbPassword: process.env.DB_PASSWORD,
   dbHost: process.env.DB_HOST,
