@@ -6,8 +6,8 @@ const {
   deleteProduct
 } = require('../products');
 
-describe('get all products', () => {
-  it('should get users collection', (done) => {
-    done();
-  });
-});
+// describe('get all products', () => {
+//   it('should get users collection', (done) => {
+//     done();
+//   });
+// });
