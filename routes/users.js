@@ -28,6 +28,7 @@ const initAdminUser = (app, next) => {
     roles: {
       admin: true,
     },
+    // cod: 1,
   };
 
   // TODO: crear usuaria admin
