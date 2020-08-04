@@ -4,27 +4,26 @@ require('dotenv').config();
 const {
   linksPagination,
 } = require('../utils/utils');
+const MongoLibMock = require('../mocks/mongoMock');
 
-const connector = new MongoLib();
+const connector = new MongoLib() || new MongoLibMock();
 
 module.exports = {
   getProducts: async (req, resp, next) => {
-    const { query } = req;
-
-    const internalQuery = {
-      statusElem: { isActive: true },
-    };
+    const { page, limit } = req.query;
 
     try {
-      const allProducts = query
-        ? await connector.pagination('products', parseInt(query.page, 0), parseInt(query.limit, 0), internalQuery)
-        : await connector.getAll('products', internalQuery);
+      const pageCurrent = parseInt(page, 10) || 1;
+      const limitCurrent = parseInt(limit, 10) || 10;
+      const url = `${req.protocol}://${req.get('host')}${req.path}`;
 
-      const links = linksPagination(req.get('Referer'), query.page, query.limit, (await connector.getAll('products')).length);
-      resp.set(links);
-      resp.send(allProducts);
+      const links = linksPagination(url, pageCurrent, limitCurrent, (await connector.getAll('products')).length);
+      resp.set('link', links);
+
+      const allUsers = await connector.pagination('products', parseInt(pageCurrent, 0), parseInt(limitCurrent, 0));
+      resp.send(allUsers);
     } catch (error) {
-      next(401);
+      next(403);
     }
   },
 

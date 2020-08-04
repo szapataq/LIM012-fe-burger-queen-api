@@ -8,10 +8,10 @@ require('dotenv').config();
 
 const config = {
   port: process.env.PORT || 8080,
-  dbUrl: process.env.MONGO_URL || process.env.DB_URL,
-  dbUser: process.env.DB_USER,
-  dbPassword: process.env.DB_PASSWORD,
-  dbHost: process.env.DB_HOST,
+  dbUrl: process.env.DDB_URL || process.env.MONGO_URL || process.env.DB_URL,
+  dbUser: process.env.MONGO_INITDB_ROOT_USERNAME || process.env.DB_USER,
+  dbPassword: process.env.MONGO_INITDB_ROOT_PASSWORD || process.env.DB_PASSWORD,
+  dbHost: process.env.DDB_HOST || process.env.DB_HOST,
   dbName: process.env.DB_NAME,
   jwtSecret: process.env.JWT_SECRET,
   adminEmail: process.env.ADMIN_EMAIL,
