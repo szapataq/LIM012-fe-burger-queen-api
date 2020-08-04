@@ -3,9 +3,8 @@ const { spawn } = require('child_process');
 const nodeFetch = require('node-fetch');
 const kill = require('tree-kill');
 const setup = require('@shelf/jest-mongodb/setup');
-const MongodbMemoryServer = require('mongodb-memory-server').default;
-
-global.__MONGOD__ = MongodbMemoryServer;
+// const MongodbMemoryServer = require('mongodb-memory-server').default;
+// global.__MONGOD__ = MongodbMemoryServer;
 
 const config = require('../config');
 
@@ -103,14 +102,15 @@ const waitForServerToBeReady = (retries = 10) => new Promise((resolve, reject) =
   }, 1000);
 });
 
-module.exports = () => new Promise((resolve, reject) => {
-  if (process.env.REMOTE_URL) {
-    console.info(`Running tests on remote server ${process.env.REMOTE_URL}`);
-    return resolve();
-  }
+module.exports = () => setup()
+  .then(() => new Promise((resolve, reject) => {
+    if (process.env.REMOTE_URL) {
+      console.info(`Running tests on remote server ${process.env.REMOTE_URL}`);
+      return resolve();
+    }
 
-  // // TODO: Configurar DB de tests
-  setup().then(() => {
+    // // TODO: Configurar DB de tests
+
     console.log(process.env.MONGO_URL, 'mongo url'); // eslint-disable-line
     console.info('Staring local server...');
     const child = spawn('npm', ['start', process.env.PORT || 8888], {
@@ -146,15 +146,13 @@ module.exports = () => new Promise((resolve, reject) => {
       .catch((err) => {
         kill(child.pid, 'SIGKILL', () => reject(err));
       });
-  });
+    // Export globals - ugly...
+    global.__e2e = __e2e;
 
-  // Export globals - ugly... :-(
-  global.__e2e = __e2e;
-
-  // Export stuff to be used in tests!
-  process.baseUrl = baseUrl;
-  process.fetch = fetch;
-  process.fetchWithAuth = fetchWithAuth;
-  process.fetchAsAdmin = fetchAsAdmin;
-  process.fetchAsTestUser = fetchAsTestUser;
-});
+    // Export stuff to be used in tests!
+    process.baseUrl = baseUrl;
+    process.fetch = fetch;
+    process.fetchWithAuth = fetchWithAuth;
+    process.fetchAsAdmin = fetchAsAdmin;
+    process.fetchAsTestUser = fetchAsTestUser;
+  }));
