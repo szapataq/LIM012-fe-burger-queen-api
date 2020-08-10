@@ -1,10 +1,26 @@
-const { MongoMemoryServer } = require('mongodb-memory-server');
 const {
-  getUsers, getOneUser, createUser, updateUser, deleteUser,
+  getUsers,
+  createUser,
 } = require('../users');
 
-describe('getUsers', () => {
-  it('should get users collection', (done) => {
-    done();
+describe('create user', () => {
+  test('deberia crear un usuario', (done) => {
+    const req = {
+      body: { email: 'sandra@gmail.com', password: 'qwerty' },
+    };
+
+    const res = {
+      status: (value) => { console.log('status', value); },
+      send: (value) => { console.log('send', value); },
+    };
+
+    const next = (value) => { console.log('next', value); };
+
+    const dataExpect = {
+      email: 'sandra@gmail.com',
+      password: 'querty',
+    };
+
+    createUser(req, res, next);
   });
 });
