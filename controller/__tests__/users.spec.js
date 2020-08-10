@@ -2,7 +2,7 @@ const {
   getUsers,
   createUser,
 } = require('../users');
-
+|
 describe('create user', () => {
   test('deberia crear un usuario', (done) => {
     const req = {
@@ -14,7 +14,7 @@ describe('create user', () => {
       send: (value) => { console.log('send', value); },
     };
 
-    const next = (value) => { console.log('next', value); };
+    const next = (value) => { expect(data.name).toBe(dataExpect.name); };
 
     const dataExpect = {
       email: 'sandra@gmail.com',
