@@ -27,7 +27,7 @@
     "jsonwebtoken": "8.5.1",
     "mongo-mock": "^4.0.0",
     "mongodb": "^3.5.9",
-    "mongoose": "^5.9.24",
+    "mongoose": "^5.9.28",
     "sinon": "^9.0.2"
   },
   "devDependencies": {
