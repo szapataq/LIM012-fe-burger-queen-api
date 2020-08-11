@@ -1,5 +1,4 @@
 const linksPagination = (url, page, limit, total) => {
-
   const prevPage = page > 1 ? (parseInt(page, 0) - 1) : 1;
   const nextPage = limit * page < total ? parseInt(page, 0) + 1 : Math.ceil(total / limit);
   const lastPage = Math.ceil(total / limit);
